@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Account</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+</head>
+<style>
+  .accountLink {
+    color: #D768C3 !important;
+  }
+
+  .navbar-right a{
+    font-size:20px;
+    color: black;
+  }
+
+  .navbar{
+    padding-top:15px;
+  }
+
+  .navbar-header{
+    padding-left:25px !important;
+  }
+
+  .centered{
+        float: none !important;
+        margin: 0 auto !important;
+        display:block !important;
+  }
+
+  .form{
+   position: absolute;
+   border-top: 2px solid #D768C3;
+   border-left: 2px solid #D768C3;
+   border-bottom: 2px solid #28B6CF;
+   border-right: 2px solid #28B6CF;
+   padding-bottom: 5px;
+  }
+
+   body{
+    background-image: url("img/background.jpg");
+
+   }
+
+
+.submitBtn {
+    border: 2px solid #D768C3;
+
+    background-color:transparent;
+}
+
+.submitBtn:hover {
+  border:2px solid  #28B6CF;
+
+  background-color:transparent;
+}
+</style>
+<body>
+<nav class="navbar">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#"><img src = "img/logo.jpg" width="75px" height="75px"></a>
+    </div>
+    <ul class="nav navbar-nav">
+<!--      <li class="active"><a href="#">Home</a></li>-->
+<!--      <li><a href="#">Page 1</a></li>-->
+<!--      <li><a href="#">Page 2</a></li>-->
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="index.html"><b>Home</b></a></li>
+      <li><a href="#"><b>About</b></a></li>
+      <li><a href="createAccount.html" class = "accountLink"><b>Create an Account</b></a></li>
+    </ul>
+  </div>
+</nav>
+<!--br -> break line -->
+<br>
+<br>
+<br>
+<div class = "logInDiv text-center container-fluid">
+    <form class = "form " action="">
+        <div class = "row centered">
+            <div class="form-group col-xs-12">
+                <label for="email">Email address:</label>
+                <input type="email" class="form-control" id="email">
+            </div>
+        </div>
+        <div class = "row centered">
+            <div class="form-group col-xs-12">
+                <label for="pwd">Password:</label>
+                <input type="password" class="form-control" id="pwd">
+            </div>
+        </div>
+        <div class="checkbox">
+            <label><input type="checkbox"> Remember me</label>
+        </div>
+        <button type="submit" class="btn submitBtn">Submit</button>
+    </form>
+</div>
+
+
+
+
+
+
+
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>
