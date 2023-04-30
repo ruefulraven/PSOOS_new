@@ -33,7 +33,8 @@ public class LoginController {
         String passwordSaved = "asdasd";
         boolean isLoginCorrect = false;
 
-        if(emailAddressSaved.equals(loginDTO.getEmail()) && passwordSaved.equals(loginDTO.getPassword())){
+        if(emailAddressSaved.equals(loginDTO.getEmail())
+                && passwordSaved.equals(loginDTO.getPassword())){
             isLoginCorrect = true;
         }
         boolean isSuccess = false;

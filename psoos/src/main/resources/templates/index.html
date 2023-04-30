@@ -83,13 +83,8 @@
 <br>
 <br>
 <div class = "logInDiv text-center container-fluid">
-    <div class = "row">
-        <div class = "col">
-            <div class = "error" th:if = "${isSuccess} == false">
-              <h4 class = "text-danger"> Credentials is Wrong</h4>
-
-            </div>
-        </div>
+    <div class = "error" th:if = "${isSuccess} == false">
+      <h4 class = "text-danger"> Credentials is Wrong</h4>
     </div>
     <form class = "form " action="" th:action = "@{/login}" method = "post">
         <div class = "row centered">
