@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th = "http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Login</title>
@@ -64,7 +64,7 @@
 <nav class="navbar">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#"><img src = "img/logo.jpg" width="75px" height="75px"></a>
+      <a class="navbar-brand" th:href="@{/loginPage}"><img src = "../img/logo.jpg" width="75px" height="75px"></a>
     </div>
     <ul class="nav navbar-nav">
 <!--      <li class="active"><a href="#">Home</a></li>-->
@@ -74,7 +74,7 @@
     <ul class="nav navbar-nav navbar-right">
       <li><a href="index.html"><b>Home</b></a></li>
       <li><a href="#"><b>About</b></a></li>
-      <li><a href="createAccount.html" class = "accountLink"><b>Create an Account</b></a></li>
+      <li><a th:href="@{/registrationPage}" class = "accountLink"><b>Create an Account</b></a></li>
     </ul>
   </div>
 </nav>
@@ -83,17 +83,25 @@
 <br>
 <br>
 <div class = "logInDiv text-center container-fluid">
-    <form class = "form " action="">
+    <div class = "row">
+        <div class = "col">
+            <div class = "error" th:if = "${isSuccess} == false">
+              <h4 class = "text-danger"> Credentials is Wrong</h4>
+
+            </div>
+        </div>
+    </div>
+    <form class = "form " action="" th:action = "@{/login}" method = "post">
         <div class = "row centered">
             <div class="form-group col-xs-12">
                 <label for="email">Email address:</label>
-                <input type="email" class="form-control" id="email">
+                <input type="email" class="form-control" th:name = "email" id="email">
             </div>
         </div>
         <div class = "row centered">
             <div class="form-group col-xs-12">
                 <label for="pwd">Password:</label>
-                <input type="password" class="form-control" id="pwd">
+                <input type="password" class="form-control" th:name = "password" id="pwd">
             </div>
         </div>
         <div class="checkbox">
