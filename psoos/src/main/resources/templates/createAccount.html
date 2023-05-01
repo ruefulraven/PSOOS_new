@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th = "http://thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Create Account</title>
@@ -83,35 +83,38 @@
 <br>
 <br>
 <div class = "logInDiv text-center container-fluid">
-    <form class = "form " action="">
+    <div class = "error" th:if = "${isSuccess} == true">
+        <h4 class = "text-success">Customer credentials are saved!</h4>
+    </div>
+    <form class = "form " action="" th:action = "@{/createAccount}" method = "post">
         <div class = "row centered">
             <div class="form-group col-xs-12">
                 <label for="email">Name</label>
-                <input type="email" class="form-control" id="email">
+                <input type="text" class="form-control" id="email" th:name = "customerName">
             </div>
         </div>
         <div class = "row centered">
             <div class="form-group col-xs-12">
                 <label for="pwd">Contact:</label>
-                <input type="password" class="form-control" id="contact">
+                <input type="number" class="form-control" id="contact" th:name = "customerPhoneNumber">
             </div>
         </div>
         <div class = "row centered">
             <div class="form-group col-xs-12">
                 <label for="pwd">Home Address:</label>
-                <input type="password" class="form-control" id="ha">
+                <input type="text" class="form-control" th:name = "customerHomeAddress" id="ha">
             </div>
         </div>
         <div class = "row centered">
             <div class="form-group col-xs-12">
                 <label for="pwd">Email Address:</label>
-                <input type="password" class="form-control" id="ea">
+                <input type="text" class="form-control" id="ea" th:name = "customerEmail">
             </div>
         </div>
         <div class = "row centered">
             <div class="form-group col-xs-12">
                 <label for="pwd">Password:</label>
-                <input type="password" class="form-control" id="pwd">
+                <input type="password" class="form-control" id="pwd" th:name = "password">
             </div>
         </div>
         <div class="checkbox">
