@@ -86,6 +86,9 @@
     <div class = "error" th:if = "${isSuccess} == true">
         <h4 class = "text-success">Customer credentials are saved!</h4>
     </div>
+    <div class = "error" th:if = "${nameBlank} == true">
+        <h4 class = "text-danger"> Name must not be blank!!</h4>
+    </div>
     <form class = "form " action="" th:action = "@{/createAccount}" method = "post">
         <div class = "row centered">
             <div class="form-group col-xs-12">

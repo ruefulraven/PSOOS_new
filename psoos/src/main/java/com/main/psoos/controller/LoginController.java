@@ -83,13 +83,24 @@ public class LoginController {
     public String createAccount(CustomerDTO customerDTO, Model model) {
       System.out.println(customerDTO.getCustomerEmail() + customerDTO.getCustomerName());
 
-        Customer customer = new Customer(customerDTO);
-        UserDTO userDTO = new UserDTO(customerDTO);
-        User user = new User(userDTO);
-        user.setRole("USER_CLIENT");
-        userService.createUser(user);
-        customerService.createCustomer(customer);
-        model.addAttribute("isSuccess", true);
+        boolean isSuccess = true;
+        if(customerDTO.getCustomerName().equals("")){
+            model.addAttribute("nameBlank",true);
+            isSuccess = false;
+        }
+        if(customerDTO.getCustomerName().equals("")){
+            model.addAttribute("nameBlank",true);
+            isSuccess = false;
+        }
+
+        if(isSuccess == true){
+            Customer customer = new Customer(customerDTO);
+            UserDTO userDTO = new UserDTO(customerDTO);
+            User user = new User(userDTO);
+            user.setRole("USER_CLIENT");
+            userService.createUser(user);
+            customerService.createCustomer(customer);
+        }
 
         return "createAccount";
     }
