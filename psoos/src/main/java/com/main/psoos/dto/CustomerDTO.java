@@ -22,6 +22,5 @@ public class CustomerDTO {
         this.customerEmail = customer.getCustomerEmail();
         this.customerPhoneNumber = customer.getCustomerPhoneNumber();
     }
-
 }
 

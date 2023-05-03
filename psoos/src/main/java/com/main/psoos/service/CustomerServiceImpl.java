@@ -14,4 +14,14 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer createCustomer(Customer customer) {
         return customerRepository.save(customer);
     }
+
+    public Customer getCustomerByName(String name){
+        Customer tempCustomer = customerRepository.findByCustomerName(name);
+        return tempCustomer;
+    }
+
+    @Override
+    public Customer updateCustomerDetails(Customer customer) {
+        return customerRepository.save(customer);
+    }
 }
