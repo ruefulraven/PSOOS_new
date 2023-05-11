@@ -1,7 +1,10 @@
 package com.main.psoos.controller;
 
 import com.main.psoos.dto.CustomerDTO;
+import com.main.psoos.dto.DocumentDTO;
 import com.main.psoos.dto.LoginDTO;
+import com.main.psoos.dto.MugDTO;
+import com.main.psoos.dto.ShirtDTO;
 import com.main.psoos.dto.UserDTO;
 import com.main.psoos.model.Customer;
 import com.main.psoos.model.User;
@@ -11,11 +14,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 
-import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller
@@ -25,6 +27,8 @@ public class LoginController {
 
     @Autowired
     UserService userService;
+
+    List<Object> orders = new ArrayList<>();
 
     @GetMapping("/getMyName")
     public String getMyName(){
@@ -42,7 +46,7 @@ public class LoginController {
         Customer customer = customerService.getCustomerByName(user.getName());
         model.addAttribute("name", user.getName());
         model.addAttribute("customer", customer);
-        System.out.println(user.getName());
+
         return "account";
     }
 
@@ -72,8 +76,6 @@ public class LoginController {
             isSuccess = true;
             return accountPage(model, tempUser);
         }
-
-
 
         model.addAttribute("isSuccess",isSuccess);
         return "index";
@@ -113,6 +115,22 @@ public class LoginController {
         customerService.updateCustomerDetails(tempCustomer);
         User user = userService.getUserByName(tempCustomer.getCustomerName());
         model.addAttribute("customer", tempCustomer);
+
         return "account";
+    }
+
+    @GetMapping("/myOrdersPage")
+    public String myOrdersPage(){
+        return "myOrders";
+    }
+
+    public void addMugOrder(MugDTO mugDTO){
+        orders.add(mugDTO);
+    }
+    public void addDocumentOrder(DocumentDTO tempDocument){
+        orders.add(tempDocument);
+    }
+    public void addShirtOrder(ShirtDTO tempShirt){
+        orders.add(tempShirt);
     }
 }

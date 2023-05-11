@@ -240,7 +240,7 @@ border-top: 2px solid #D768C3;
           <a href="#home"><span class="fa fa-home solo">MY ACCOUNT</span></a>
         </li>
         <li>
-          <a th:href="@{/myOrdersPage}" data-scroll>
+          <a href="#anch1" data-scroll>
             <span class="fa fa-anchor solo">MY ORDERS</span>
           </a>
         </li>
@@ -268,70 +268,33 @@ border-top: 2px solid #D768C3;
     <div class="page-content inset" data-spy="scroll" data-target="#spy">
       <div class="row">
         <div class="jumbotron text-center" >
-          <div class = "col-md-6">
-            Picture here :--]
-          </div>
-          <div class = "col-md-6">
-            <form class = "form " action="" th:action = "@{/updateAccount}" method = "post">
-              <div class = "row centered">
-                <div class="form-group col-xs-12">
-                  <label for="email">Name</label>
-                  <input type="text" class="form-control" id="email" th:name = "customerName" th:value = "${customer.customerName}">
-                </div>
-              </div>
-              <div class = "row centered">
-                <div class="form-group col-xs-12">
-                  <label for="pwd">Contact:</label>
-                  <input type="number" class="form-control" id="contact" th:name = "customerPhoneNumber" th:value = "${customer.customerPhoneNumber}">
-                </div>
-              </div>
-              <div class = "row centered">
-                <div class="form-group col-xs-12">
-                  <label for="pwd">Home Address:</label>
-                  <input type="text" class="form-control" th:name = "customerHomeAddress" id="ha">
-                </div>
-              </div>
-              <div class = "row centered">
-                <div class="form-group col-xs-12">
-                  <label for="pwd">Email Address:</label>
-                  <input type="text" class="form-control" id="ea" th:name = "customerEmail">
-                </div>
-              </div>
-              <div class = "row centered">
-                <div class="form-group col-xs-12">
-                  <label for="pwd">Password:</label>
-                  <input type="password" class="form-control" id="pwd" th:name = "password">
-                </div>
-              </div>
-              <div class="checkbox">
-                <label><input type="checkbox"> Remember me</label>
-              </div>
-              <button type="submit" class="btn submitBtn">Submit</button>
-            </form>
-          </div>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
-          <br>
+          <table class="table table-condensed">
+            <thead>
+            <tr>
+              <th>Firstname</th>
+              <th>Lastname</th>
+              <th>Email</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+              <td>John</td>
+              <td>Doe</td>
+              <td>john@example.com</td>
+            </tr>
+            <tr>
+              <td>Mary</td>
+              <td>Moe</td>
+              <td>mary@example.com</td>
+            </tr>
+            <tr>
+              <td>July</td>
+              <td>Dooley</td>
+              <td>july@example.com</td>
+            </tr>
+            </tbody>
+          </table>
+          <a href="#home" class = "button button-primary">ADD ORDER</a>
         </div>
       </div>
     </div>
