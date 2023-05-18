@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th = "http://thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>UpLoad Document</title>
+  <title>Upload Document</title>
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <!-- Optional theme -->
@@ -33,14 +33,7 @@
         display:block !important;
   }
 
-  .form{
-   position: absolute;
-   border-top: 2px solid #D768C3;
-   border-left: 2px solid #D768C3;
-   border-bottom: 2px solid #28B6CF;
-   border-right: 2px solid #28B6CF;
-   padding-bottom: 5px;
-  }
+
 
    body{
     background-image: url("img/background.jpg");
@@ -100,6 +93,7 @@ border-top: 2px solid #D768C3;
       <!-- Picture -->
       </div>
       <div class = "col-md-6">
+      <form class = "form " action="" th:action = "@{/addDocument}" method = "post">
         <h1>DOCUMENT</h1>
         <div class="mb-3">
           <!--          <label for="formFile" class="form-label">Default file input example</label>-->
@@ -112,24 +106,12 @@ border-top: 2px solid #D768C3;
             <h5><b>Paper Size</b></h5>
           </div>
           <div class = "col-md-6">
-            <div class="btn-group" data-toggle="buttons">
-              <label class="btn btn-default active">A4
-                <input type="radio" name="options" id="doption1" autocomplete="off" >
-                <span class="glyphicon glyphicon-ok"></span>
-              </label>
-              <label class="btn btn-default active">Legal
-                <input type="radio" name="options" id="doption2" autocomplete="off" >
-                <span class="glyphicon "></span>
-              </label>
-              <label class="btn btn-default active">Letter
-                <input type="radio" name="options" id="doption3" autocomplete="off" >
-                <span class="glyphicon "></span>
-              </label>
-              <label class="btn btn-default active">Custom
-                <input type="radio" name="options" id="doption4" autocomplete="off" >
-                <span class="glyphicon "></span>
-              </label>
-            </div>
+            <select  class="form-control" id="" th:name = "paperSize">
+              <option>A4</option>
+              <option>Legal</option>
+              <option>Letter</option>
+              <option>Custom</option>
+            </select>
           </div>
 
         </div>
@@ -138,17 +120,10 @@ border-top: 2px solid #D768C3;
             <h5><b>Print Type</b></h5>
           </div>
           <div class = "col-md-6">
-            <div class="btn-group" data-toggle="buttons">
-              <label class="btn btn-default active">Colored
-                <input type="radio" name="options" id="poption1" autocomplete="off" >
-                <span class="glyphicon glyphicon-ok"></span>
-              </label>
-              <label class="btn btn-default active">Black
-                <input type="radio" name="options" id="poption2" autocomplete="off" >
-                <span class="glyphicon "></span>
-              </label>
-
-            </div>
+            <select  class="form-control" th:name = "printType">
+              <option>Colored</option>
+              <option>Black</option>
+            </select>
           </div>
 
         </div>
@@ -158,13 +133,14 @@ border-top: 2px solid #D768C3;
             <h5><b>No. of pages</b></h5>
           </div>
           <div class = "col-md-6">
-            <input type = "number">
+            <input type = "number" th:name = "noOfPages">
           </div>
         </div>
+        <input type = "submit" placeholder = "Submit Order" class = "btn btn-primary" />
+      </form>
       </div>
-      <input type = "submit" placeholder = "Submit Order" class = "btn btn-primary" />
-    </div>
 
+    </div>
 </div>
 
 <!--              <input type="radio" name="options" id="option1" autocomplete="off" chacked>-->

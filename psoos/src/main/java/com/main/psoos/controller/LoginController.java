@@ -28,7 +28,10 @@ public class LoginController {
     @Autowired
     UserService userService;
 
-    List<Object> orders = new ArrayList<>();
+    List<DocumentDTO> documentOrders = new ArrayList<>();
+    List<MugDTO> mugOrders = new ArrayList<>();
+    List<ShirtDTO> shirtOrders = new ArrayList<>();
+
 
     @GetMapping("/getMyName")
     public String getMyName(){
@@ -124,13 +127,31 @@ public class LoginController {
         return "myOrders";
     }
 
-    public void addMugOrder(MugDTO mugDTO){
-        orders.add(mugDTO);
+    @GetMapping("/homePage")
+    public String homePage(){
+        return "home";
     }
+
+    @GetMapping("/uploadDocuments")
+    public String uploadDocumentsPage(){
+        return "uploadDocuments";
+    }
+
+    @PostMapping("/addDocument")
+    public String addDocument(DocumentDTO tempDocument, Model model){
+        addDocumentOrder(tempDocument);
+        model.addAttribute("orders", documentOrders);
+        return "cartOrders";
+    }
+
+//    public void addMugOrder(MugDTO mugDTO){
+//        orders.add(mugDTO);
+//    }
     public void addDocumentOrder(DocumentDTO tempDocument){
-        orders.add(tempDocument);
+        tempDocument.setOrderType("DOCUMENT");
+        documentOrders.add(tempDocument);
     }
-    public void addShirtOrder(ShirtDTO tempShirt){
-        orders.add(tempShirt);
-    }
+//    public void addShirtOrder(ShirtDTO tempShirt){
+//        orders.add(tempShirt);
+//    }
 }

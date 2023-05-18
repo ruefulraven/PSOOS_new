@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th = "http://thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Account</title>
+  <title>My Orders</title>
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <!-- Optional theme -->
@@ -271,30 +271,16 @@ border-top: 2px solid #D768C3;
           <table class="table table-condensed">
             <thead>
             <tr>
-              <th>Firstname</th>
-              <th>Lastname</th>
-              <th>Email</th>
+              <th>Order ID</th>
+              <th>Status</th>
+              <th>Action</th>
             </tr>
             </thead>
             <tbody>
-            <tr>
-              <td>John</td>
-              <td>Doe</td>
-              <td>john@example.com</td>
-            </tr>
-            <tr>
-              <td>Mary</td>
-              <td>Moe</td>
-              <td>mary@example.com</td>
-            </tr>
-            <tr>
-              <td>July</td>
-              <td>Dooley</td>
-              <td>july@example.com</td>
-            </tr>
+
             </tbody>
           </table>
-          <a href="#home" class = "button button-primary">ADD ORDER</a>
+          <a th:href="@{/homePage}" class = "button button-primary">ADD ORDER</a>
         </div>
       </div>
     </div>
