@@ -147,7 +147,7 @@ public class LoginController {
         addDocumentOrder(tempDocument);
         model.addAttribute("orders", documentOrders);
         model.addAttribute("mugOrders", mugOrders);
-        model.addAttribute("mugOrders", shirtOrders);
+        model.addAttribute("shirtOrders", shirtOrders);
         return "cartOrders";
     }
 
@@ -156,7 +156,7 @@ public class LoginController {
         addMugOrder(mugDTO);
         model.addAttribute("mugOrders", mugOrders);
         model.addAttribute("orders", documentOrders);
-        model.addAttribute("mugOrders", shirtOrders);
+        model.addAttribute("shirtOrders", shirtOrders);
         return "cartOrders";
     }
 
