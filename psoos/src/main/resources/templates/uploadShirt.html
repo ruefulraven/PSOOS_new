@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th = "http://thymeleaf.org">
+<html lang="en"  xmlns:th = "http://thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Login</title>
+  <title>Upload T-Shirt</title>
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <!-- Optional theme -->
@@ -65,59 +65,83 @@ border-top: 2px solid #D768C3;
    border-bottom: 2px solid #28B6CF;
    border-right: 2px solid #28B6CF;
 }
+.btn span.glyphicon {
+	opacity: 0;
+}
+.btn.active span.glyphicon {
+	opacity: 1;
+}
 </style>
 <body>
 <nav class="navbar">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#"><img src = "img/logo.jpg" width="75px" height="75px"></a>
+      <a class="navbar-brand" href="#"><img src = "../img/logo1.jpg" width="150px" height="150px"></a>
     </div>
-    <ul class="nav navbar-nav">
-      <!--      <li class="active"><a href="#">Home</a></li>-->
-      <!--      <li><a href="#">Page 1</a></li>-->
-      <!--      <li><a href="#">Page 2</a></li>-->
-    </ul>
     <ul class="nav navbar-nav navbar-right">
-      <li><a href="index.html"><b>Home</b></a></li>
+      <li><a th:href="@{/loginPage}"><b>Home</b></a></li>
       <li><a href="#"><b>About</b></a></li>
-      <li><a href="createAccount.html" class = "accountLink"><b>My Account</b></a></li>
+      <li><a th:href="@{/account}" class = "accountLink"><b>My Account</b></a></li>
     </ul>
   </div>
 </nav>
-<!--br -> break line -->
 <br>
 <br>
 <br>
 <div class = "logInDiv text-center container-fluid">
-  <h1>Choose your Order Type.</h1>
-  <div class="row">
-    <div class="col-md-6">
-      <div class="thumbnail">
-        <a href="">
-          <img src="img/ownDesign.jpg" alt="Lights" style="width:25%">
-          <div class="caption">
-            <h2>I have my own Design</h2>
-          </div>
-        </a>
+  <form class = "form " action="" th:action = "@{/addShirt}" method = "post">
+  <div class = "row">
+    <div class = "col-md-6">
+      <img src="/img/tshirt1.jpg" alt="Lights" style="width:75%">
+    </div>
+    <div class = "col-md-6">
+      <h1>T-SHIRT</h1>
+      <div class="mb-3">
+        <input class="form-control" type="file" id="formFile">
+      </div>
+      <br>
+      <div class = "row">
+        <div class = "col-md-6">
+          <br>
+          <h5><b>Sizes</b></h5>
+        </div>
+        <div class = "col-md-6">
+          <select  class="form-control" id="" th:name = "shirtSize">
+            <option>Extra Small</option>
+            <option>Small</option>
+            <option>Medium</option>
+            <option>Large</option>
+            <option>Extra Large</option>
+          </select>
+        </div>
+      </div>
+      <div class = "row">
+        <div class = "col-md-6">
+          <h5><b>Print Type</b></h5>
+        </div>
+        <div class = "col-md-6">
+          <select  class="form-control" id="" th:name = "printType">
+            <option>Rubberized</option>
+            <option>DTF</option>
+
+          </select>
+        </div>
+
+      </div>
+      <div class = "row">
+        <br>
+        <div class = "col-md-6">
+          <h5><b>Quantity</b></h5>
+        </div>
+        <div class = "col-md-6">
+          <input type = "number" th:name = "noOfShirt">
+        </div>
       </div>
     </div>
-    <div class="col-md-6">
-      <div class="thumbnail">
-        <a th:href="@{/pickCustomizations}">
-          <img src="img/helpDesign.jpg" alt="Nature" style="width:28%">
-          <div class="caption">
-            <h2>I need help with Design</h2>
-          </div>
-        </a>
-      </div>
-    </div>
+    <input type = "submit" placeholder = "Submit Order" class = "btn btn-primary" />
+  </div>
+  </form>
 
 </div>
-</div>
-
-
-
-<!-- Latest compiled and minified JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </body>
-</html>

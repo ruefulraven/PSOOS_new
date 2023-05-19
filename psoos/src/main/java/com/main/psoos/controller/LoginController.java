@@ -32,12 +32,6 @@ public class LoginController {
     List<MugDTO> mugOrders = new ArrayList<>();
     List<ShirtDTO> shirtOrders = new ArrayList<>();
 
-
-    @GetMapping("/getMyName")
-    public String getMyName(){
-        return "Axel";
-    }
-
     @GetMapping("/loginPage")
     public String loginPage(Model model){
         model.addAttribute("isSuccess", true);
@@ -107,6 +101,7 @@ public class LoginController {
             customerService.createCustomer(customer);
         }
 
+        model.addAttribute("isSuccess",isSuccess);
         return "createAccount";
     }
 
@@ -137,21 +132,58 @@ public class LoginController {
         return "uploadDocuments";
     }
 
+    @GetMapping("/uploadMug")
+    public String uploadMugPage(){
+        return "uploadMug";
+    }
+
+    @GetMapping("/uploadShirt")
+    public String uploadShirtPage(){
+        return "uploadShirt";
+    }
+
     @PostMapping("/addDocument")
     public String addDocument(DocumentDTO tempDocument, Model model){
         addDocumentOrder(tempDocument);
         model.addAttribute("orders", documentOrders);
+        model.addAttribute("mugOrders", mugOrders);
+        model.addAttribute("mugOrders", shirtOrders);
         return "cartOrders";
     }
 
-//    public void addMugOrder(MugDTO mugDTO){
-//        orders.add(mugDTO);
-//    }
+    @PostMapping("/addMug")
+    public String addMug(MugDTO mugDTO, Model model){
+        addMugOrder(mugDTO);
+        model.addAttribute("mugOrders", mugOrders);
+        model.addAttribute("orders", documentOrders);
+        model.addAttribute("mugOrders", shirtOrders);
+        return "cartOrders";
+    }
+
+    @PostMapping("/addShirt")
+    public String addShirt(ShirtDTO shirtDTO, Model model){
+        addShirtOrder(shirtDTO);
+        model.addAttribute("mugOrders", mugOrders);
+        model.addAttribute("shirtOrders", shirtOrders);
+        model.addAttribute("orders", documentOrders);
+        return "cartOrders";
+    }
+
+    public void addMugOrder(MugDTO mugDTO){
+        mugDTO.setOrderType("MUG");
+        mugOrders.add(mugDTO);
+    }
     public void addDocumentOrder(DocumentDTO tempDocument){
         tempDocument.setOrderType("DOCUMENT");
         documentOrders.add(tempDocument);
     }
-//    public void addShirtOrder(ShirtDTO tempShirt){
-//        orders.add(tempShirt);
-//    }
+    public void addShirtOrder(ShirtDTO tempShirt){
+        tempShirt.setOrderType("SHIRT");
+        shirtOrders.add(tempShirt);
+    }
+
+    @GetMapping("/pickCustomizations")
+    public String pickCustomizationsPage(){
+        return "WhatWouldYouLikeToCustomize";
+    }
 }
