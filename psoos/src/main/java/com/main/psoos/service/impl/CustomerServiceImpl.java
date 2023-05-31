@@ -1,8 +1,9 @@
 
-package com.main.psoos.service;
+package com.main.psoos.service.impl;
 
 import com.main.psoos.model.Customer;
 import com.main.psoos.repository.CustomerRepository;
+import com.main.psoos.service.CustomerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -266,6 +266,7 @@ border-top: 2px solid #D768C3;
     </div>
 
     <div class="page-content inset" data-spy="scroll" data-target="#spy">
+      <form class = "form " action="" th:action = "@{/submitOrder}" method = "post">
       <div class="row">
         <div class="jumbotron text-center" >
           <div class = "row">
@@ -312,7 +313,6 @@ border-top: 2px solid #D768C3;
               </table>
             </div>
             <div class = "col-md-4">
-
               <table class="table table-condensed">
                 <thead>
                 <tr>
@@ -336,10 +336,12 @@ border-top: 2px solid #D768C3;
             </div>
 
           </div>
-
+          <div>Total Order Amount <div th:text = "${totalPrice}"></div></div>
           <a th:href="@{/homePage}" class = "button button-primary">ADD ORDER</a>
+          <button type="submit" class="btn submitBtn">Submit Order</button>
         </div>
       </div>
+      </form>
     </div>
   </div>
 </div>

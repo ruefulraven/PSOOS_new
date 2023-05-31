@@ -33,7 +33,14 @@
         display:block !important;
   }
 
-
+<!--  .form{-->
+<!--   position: absolute;-->
+<!--   border-top: 2px solid #D768C3;-->
+<!--   border-left: 2px solid #D768C3;-->
+<!--   border-bottom: 2px solid #28B6CF;-->
+<!--   border-right: 2px solid #28B6CF;-->
+<!--   padding-bottom: 5px;-->
+<!--  }-->
 
    body{
     background-image: url("img/background.jpg");
@@ -83,64 +90,65 @@ border-top: 2px solid #D768C3;
 <br>
 <div class = "logInDiv text-center container-fluid">
   <form class = "form " action="" th:action = "@{/addShirt}" method = "post" enctype="multipart/form-data">
-  <div class = "row">
-    <div class = "col-md-6">
-      <img src="/img/tshirt1.jpg" alt="Lights" style="width:75%">
-    </div>
-    <div class = "col-md-6">
-      <h1>T-SHIRT</h1>
-      <div class="mb-3">
-        <input class="form-control" type="file" id="formFile" th:name = "file" >
+    <div class = "row">
+      <div class = "col-md-6">
+        <img src="/img/tshirt1.jpg" alt="Lights" style="width:75%">
       </div>
-      <br>
-      <div class = "row">
-        <div class = "col-md-6">
+      <div class = "col-md-6">
+        <h1>T-SHIRT</h1>
+        <div class="mb-3">
+          <input class="form-control" type="file" id="formFile" th:name = "file" >
+        </div>
+        <br>
+        <div class = "row">
+          <div class = "col-md-6">
+            <br>
+            <h5><b>Sizes</b></h5>
+          </div>
+          <div class = "col-md-6">
+            <select  class="form-control"  th:name = "shirtSize">
+              <option>Extra Small</option>
+              <option>Small</option>
+              <option>Medium</option>
+              <option>Large</option>
+              <option>Extra Large</option>
+            </select>
+          </div>
+        </div>
+        <div class = "row">
+          <div class = "col-md-6">
+            <h5><b>Print Type</b></h5>
+          </div>
+          <div class = "col-md-6">
+            <select  class="form-control"  id = "type" th:name = "printType" onchange="calculate()">
+              <option>Rubberized</option>
+              <option>DTF</option>
+
+            </select>
+          </div>
+
+        </div>
+        <div class = "row">
           <br>
-          <h5><b>Sizes</b></h5>
-        </div>
-        <div class = "col-md-6">
-          <select  class="form-control"  th:name = "shirtSize">
-            <option>Extra Small</option>
-            <option>Small</option>
-            <option>Medium</option>
-            <option>Large</option>
-            <option>Extra Large</option>
-          </select>
-        </div>
-      </div>
-      <div class = "row">
-        <div class = "col-md-6">
-          <h5><b>Print Type</b></h5>
-        </div>
-        <div class = "col-md-6">
-          <select  class="form-control"  id = "type" th:name = "printType" onchange="calculate()">
-            <option>Rubberized</option>
-            <option>DTF</option>
-
-          </select>
+          <div class = "col-md-6">
+            <h5><b>Quantity</b></h5>
+          </div>
+          <div class = "col-md-6">
+            <input type = "number" id = "noOfShirt" th:name = "noOfShirt" onchange="calculate()">
+          </div>
         </div>
 
-      </div>
-      <div class = "row">
-        <br>
-        <div class = "col-md-6">
-          <h5><b>Quantity</b></h5>
+        <div class = "row">
+          <br>
+          <div class = "col-md-6">
+            <h5><b>Total Price</b></h5>
+          </div>
+          <div class = "col-md-6">
+            <input type = "number" id = "price" th:name = "price" readonly>
+          </div>
         </div>
-        <div class = "col-md-6">
-          <input type = "number" id = "noOfShirt" th:name = "noOfShirt" onchange="calculate()">
-        </div>
-      </div>
 
-      <div class = "row">
-        <br>
-        <div class = "col-md-6">
-          <h5><b>Total Price</b></h5>
-        </div>
-        <div class = "col-md-6">
-          <input type = "number" id = "price" th:name = "price" readonly>
-        </div>
-      </div>
-      <script type="text/javascript">
+        <script type="text/javascript">
           function calculate(){
             var shirt = document.getElementById('noOfShirt').value;
             var type = 0;
@@ -158,9 +166,9 @@ border-top: 2px solid #D768C3;
 
         </script>
 
+      </div>
+      <input type = "submit" placeholder = "Submit Order" class = "btn btn-primary" />
     </div>
-    <input type = "submit" placeholder = "Submit Order" class = "btn btn-primary" />
-  </div>
   </form>
 
 </div>

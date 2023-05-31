@@ -1,12 +1,13 @@
-package com.main.psoos.service;
+package com.main.psoos.service.impl;
 
 import com.main.psoos.model.User;
 import com.main.psoos.repository.UsersRepository;
+import com.main.psoos.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
 
     @Autowired
     UsersRepository usersRepository;

@@ -2,7 +2,7 @@
 <html lang="en" xmlns:th = "http://thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>My Orders</title>
+  <title>Admin Page</title>
   <!-- Latest compiled and minified CSS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
   <!-- Optional theme -->
@@ -237,11 +237,16 @@ border-top: 2px solid #D768C3;
     <nav id="spy">
       <ul class="sidebar-nav nav">
         <li class="sidebar-brand">
-          <a href="#home"><span class="fa fa-home solo">MY ACCOUNT</span></a>
+          <a th:href = "@{'/adminPage'}"><span class="fa fa-home solo">NEW</span></a>
         </li>
         <li>
-          <a href="#anch1" data-scroll>
-            <span class="fa fa-anchor solo">MY ORDERS</span>
+          <a th:href="@{'/adminPendingOrdersPage'}" data-scroll>
+            <span class="fa fa-anchor solo">PENDING</span>
+          </a>
+        </li>
+        <li>
+          <a th:href="@{'/adminCompletedOrdersPage'}" data-scroll>
+            <span class="fa fa-anchor solo">COMPLETED</span>
           </a>
         </li>
         <li>
@@ -279,12 +284,94 @@ border-top: 2px solid #D768C3;
             <tbody>
             <tr th:each = "order : ${orders}">
               <th th:text = "${order.joId}"></th>
-              <th>PENDING</th>
-              <th><button class = "btn btn-primary">ACTION</button></th>
+              <th th:text = "${order.status}"></th>
+              <th>
+                <a class = "btn btn-success" data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${order.joId}">View More Details</a>
+<!--                <a class = "btn btn-primary" th:href="@{'/order/ACCEPTED/' + ${order.joId}}">Accept</a>-->
+<!--                <a class = "btn btn-danger" th:href="@{'/order/DECLINED/' + ${order.joId}}">Decline</a>-->
+
+                <div class="modal modal-warning fade in" th:id="modal-warning+${order.joId }" >
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">×</span></button>
+                        <h5 class="modal-title">Job Order Contents</h5>
+                      </div>
+                      <div class="modal-body">
+                        <h3>Details Contents</h3>
+                        <div class = "row">
+                          <div class = "col-md-4">
+                            <table class="table table-condensed">
+                              <thead>
+                              <tr>
+                                <th>No of Pages</th>
+                                <th>Paper Size</th>
+                                <th>Print Type</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr th:each = "ord : ${order.documentDTOS}">
+                                <div th:if = "${order.joId} == ${ord.jobOrder}">
+                                  <th th:text = "${ord.orderType}"></th>
+                                  <th th:text = "${ord.noOfPages}"></th>
+                                  <th th:text = "${ord.paperSize}"></th>
+                                  <th th:text = "${ord.printType}"></th>
+                                </div>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <div class = "col-md-4">
+                            <table class="table table-condensed">
+                              <thead>
+                              <tr>
+                                <th>MugColor</th>
+                                <th>No. of Mugs</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr th:each = "ord : ${order.mugDTOS}">
+                                <div th:if = "${order.joId} == ${ord.jobOrder}">
+                                  <th th:text = "${ord.mugColor}"></th>
+                                  <th th:text = "${ord.noOfMug}"></th>
+                                </div>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                          <div class = "col-md-4">
+                            <table class="table table-condensed">
+                              <thead>
+                              <tr>
+                                <th>Shirt Size</th>
+                                <th>Print Type</th>
+                                <th>No. of Shirts</th>
+                              </tr>
+                              </thead>
+                              <tbody>
+                              <tr th:each = "ord : ${order.shirtDTOS}">
+                                <div th:if = "${order.joId} == ${ord.jobOrder}">
+                                  <th th:text = "${ord.shirtSize}"></th>
+                                  <th th:text = "${ord.printType}"></th>
+                                  <th th:text = "${ord.noOfShirt}"></th>
+                                </div>
+                              </tr>
+                              </tbody>
+                            </table>
+                          </div>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </th>
             </tr>
             </tbody>
           </table>
-          <a th:href="@{/homePage}" class = "button button-primary">ADD ORDER</a>
         </div>
       </div>
     </div>
@@ -317,7 +404,7 @@ border-top: 2px solid #D768C3;
 
 </script>
 
-  <!-- Latest compiled and minified JavaScript -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<!-- Latest compiled and minified JavaScript -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 </body>
 </html>

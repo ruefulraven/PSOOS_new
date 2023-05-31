@@ -33,6 +33,14 @@
         display:block !important;
   }
 
+  .form{
+   position: absolute;
+   border-top: 2px solid #D768C3;
+   border-left: 2px solid #D768C3;
+   border-bottom: 2px solid #28B6CF;
+   border-right: 2px solid #28B6CF;
+   padding-bottom: 5px;
+  }
 
    body{
     background-image: url("img/background.jpg");
@@ -102,7 +110,7 @@ border-top: 2px solid #D768C3;
                     <h5><b>Color</b></h5>
                 </div>
                 <div class = "col-md-6">
-                    <select  class="form-control" id="color" th:name = "mugColor">
+                    <select  class="form-control" id="" th:name = "mugColor">
                         <option>Black</option>
                         <option>White</option>
                         <option>Red</option>
@@ -131,11 +139,8 @@ border-top: 2px solid #D768C3;
                     <input type = "number" id = "price" th:name = "price" readonly>
                 </div>
             </div>
-        </div>
 
-
-
-        <script type="text/javascript">
+            <script type="text/javascript">
           function calculate(){
             var mugs = document.getElementById('mugs').value;
             var type = 0;
@@ -145,14 +150,14 @@ border-top: 2px solid #D768C3;
 <!--                type = 2;-->
 <!--            }-->
 
-            var price = mugs * 75;
+            var price = mugs * 100;
             console.log(price);
             document.getElementById('price').value = price;
             console.log(price);
           }
 
         </script>
-
+        </div>
         <input type = "submit" placeholder = "Submit Order" class = "btn btn-primary" />
     </div>
     </form>

@@ -287,19 +287,19 @@ border-top: 2px solid #D768C3;
               <div class = "row centered">
                 <div class="form-group col-xs-12">
                   <label for="pwd">Home Address:</label>
-                  <input type="text" class="form-control" th:name = "customerHomeAddress" id="ha">
+                  <input type="text" class="form-control" th:name = "customerHomeAddress" th:value = "${customer.customerAddress}">
                 </div>
               </div>
               <div class = "row centered">
                 <div class="form-group col-xs-12">
                   <label for="pwd">Email Address:</label>
-                  <input type="text" class="form-control" id="ea" th:name = "customerEmail">
+                  <input type="text" class="form-control" id="ea" th:name = "customerEmail" th:value = "${customer.customerPhoneNumber}">
                 </div>
               </div>
               <div class = "row centered">
                 <div class="form-group col-xs-12">
                   <label for="pwd">Password:</label>
-                  <input type="password" class="form-control" id="pwd" th:name = "password">
+                  <input type="password" class="form-control" id="pwd" th:name = "password" th:value = "${password}">
                 </div>
               </div>
               <div class="checkbox">
