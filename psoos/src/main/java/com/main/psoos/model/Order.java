@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -50,7 +51,9 @@ public class Order {
     @Column(name = "status")
     private String status;
 
-
+    @Lob
+    @Column(name = "barcode")
+    byte[] barcode;
 
     public Order(OrderDTO order){
         //this.id = order.getOrderId();
@@ -58,5 +61,6 @@ public class Order {
         this.joId = order.getJoId();
         this.status = order.getStatus();
         this.totalPrice = order.getTotalPrice();
+        this.barcode = order.getBarcode();
     }
 }

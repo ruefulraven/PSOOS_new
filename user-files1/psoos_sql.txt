@@ -1,0 +1,38 @@
+--Run this first--
+CREATE TABLE products(
+	PRIMARY KEY product_id int(255),
+    product_type varchar(255),
+    price_per_piece double
+);
+
+--Run this after running product sql query--
+CREATE TABLE Orders(
+    order_id int(255) NOT NULL AUTO_INCREMENT,
+    order_date varchar(255),
+    product_type varchar(255),
+    customer_id int(255),
+    design_file_path_file_data varchar(255),
+    design_file_path_file_flags varchar(255),
+    design_file_path_file_name varchar(255),
+    design_file_path_file_time_stamp varchar(255),
+    design_file_path_file_type varchar(255),
+    design_file_path_file_url varchar(255),
+    price double(255),
+    quantity int(255),
+    total_price double(255),
+    PRIMARY KEY (order_id),
+    FOREIGN KEY(customer_id) REFERENCES customer(customer_id),
+    FOREIGN KEY(product_type) REFERENCES products(product_id),
+);
+
+create table document(
+	id int NOT NULL AUTO_INCREMENT,
+	paperSize varchar(255),
+    printType varchar(255),
+    noOfPages Integer(255),
+    fileName varchar(255),
+    fileType varchar(255),
+    jobOrder varchar(255),
+    fileData blob,
+    PRIMARY KEY(id)
+)

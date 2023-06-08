@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.sql.Blob;
 import java.util.List;
+
 
 @Setter
 @Getter
@@ -22,11 +24,14 @@ public class OrderDTO {
     String joId;
     String status;
     Integer totalPrice;
+
+    byte[] barcode;
     public OrderDTO(Order order){
         this.orderId = order.getId();
         this.customerId = order.getCustomerId();
         this.joId = order.getJoId();
         this.status = order.getStatus();
         this.totalPrice = order.getTotalPrice();
+        this.barcode = order.getBarcode();
     }
 }

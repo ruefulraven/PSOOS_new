@@ -13,4 +13,6 @@ public interface OrderService {
     void saveOrders(Order orders);
 
     Order findByJobId(String jobId);
+
+    byte[] getImage(String joId);
 }

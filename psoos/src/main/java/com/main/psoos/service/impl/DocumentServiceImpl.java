@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +26,8 @@ public class DocumentServiceImpl implements DocumentService {
             Document document = new Document(docDTO);
             System.out.println(" Is empty? "+ docDTO.getFile().isEmpty());
             document.setFileName(fileName);
-            document.setFileData(Files.readString(Paths.get(docDTO.getFileToUpload().getPath())).getBytes());
+            //document.setFileData(Files.readString(Paths.get(docDTO.getFileToUpload().getPath())).getBytes());
+            document.setFileData(docDTO.getFile().getBytes());
             document.setFileType(docDTO.getFile().getContentType());
             document.setPrice(docDTO.getPrice());
             documentRepository.save(document);
@@ -43,6 +42,11 @@ public class DocumentServiceImpl implements DocumentService {
             documentDTOS.add(documentDTO);
         });
         return documentDTOS;
+    }
+
+    @Override
+    public DocumentDTO getDocumentDTOById(Integer Id) {
+        return new DocumentDTO(documentRepository.findById(Id).get());
     }
 
 

@@ -10,4 +10,6 @@ public interface DocumentService {
     public void store(List<DocumentDTO> documentDTO) throws IOException;
 
     public List<DocumentDTO> getDocumentDTOByJoId(String JobOrder);
+
+    public DocumentDTO getDocumentDTOById(Integer Id);
 }

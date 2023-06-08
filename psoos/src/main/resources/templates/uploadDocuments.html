@@ -101,6 +101,20 @@ border-top: 2px solid #D768C3;
         </div>
         <br>
         <div class = "row">
+          <div class = "row">
+            <div class = "col-md-6">
+              <h5><b>Customized</b></h5>
+            </div>
+            <div class = "col-md-6">
+              <select  class="form-control" id = "customize" th:name = "printType" onchange="customized()">
+                <option value = "1">Colored, 10 pcs</option>
+                <option value = "2">Black, 10 pcs</option>
+                <option value = "0">None</option>
+              </select>
+            </div>
+
+          </div>
+          <div class = "row">
           <div class = "col-md-6">
             <br>
             <h5><b>Paper Size</b></h5>
@@ -113,9 +127,7 @@ border-top: 2px solid #D768C3;
               <option>Custom</option>
             </select>
           </div>
-
-        </div>
-        <div class = "row">
+          </div>
           <div class = "col-md-6">
             <h5><b>Print Type</b></h5>
           </div>
@@ -163,7 +175,23 @@ border-top: 2px solid #D768C3;
             console.log(price);
           }
 
-        </script>
+          function customized(){
+                if(document.getElementById('customize').value === "1"){
+                  document.getElementById('pages').value = 10;
+                  document.getElementById('type').value = "Colored";
+                  calculate();
+                }else if(document.getElementById('customize').value === "2"){
+                  document.getElementById('pages').value = 10;
+                  document.getElementById('type').value = "Black";
+                  calculate();
+                }else{
+                  document.getElementById('pages').value = 0;
+                  document.getElementById('type').value = "Black";
+                  document.getElementById('price').value = 0;
+                }
+
+              }
+          </script>
 
         <input type = "submit" placeholder = "Submit Order" class = "btn btn-primary" />
       </form>

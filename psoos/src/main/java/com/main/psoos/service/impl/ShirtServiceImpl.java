@@ -9,8 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +25,7 @@ public class ShirtServiceImpl implements ShirtService {
             Shirt shirt = new Shirt(shirtTO);
             System.out.println(" Is empty? "+ shirtTO.getFile().isEmpty());
             shirt.setFileName(fileName);
-            shirt.setFileData(Files.readString(Paths.get(shirtTO.getFileToUpload().getPath())).getBytes());
+            shirt.setFileData(shirtTO.getFile().getBytes());
             shirt.setFileType(shirtTO.getFile().getContentType());
             shirt.setPrice(shirtTO.getPrice());
             shirtRepository.save(shirt);
@@ -42,5 +40,10 @@ public class ShirtServiceImpl implements ShirtService {
             shirtDTOS.add(shirtDTO);
         });
         return shirtDTOS;
+    }
+
+    @Override
+    public ShirtDTO getShirtDTOById(Integer Id) {
+        return new ShirtDTO(shirtRepository.findById(Id).get());
     }
 }

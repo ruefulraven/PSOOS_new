@@ -52,4 +52,22 @@ public class AdminController {
         customerService.createCustomer(customer);
         return "true";
     }
+
+    @GetMapping("/createAdminDesigner")
+    public String createAdminDesigner(){
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setCustomerName("Sample Designer");
+        customerDTO.setCustomerEmail("adminDesigner@gmail.com");
+        customerDTO.setCustomerPhoneNumber("093605041");
+        customerDTO.setCustomerHomeAddress("Sample Address");
+
+        Customer customer = new Customer(customerDTO);
+        UserDTO userDTO = new UserDTO(customerDTO);
+        User user = new User(userDTO);
+        user.setPassword("admin");
+        user.setRole("USER_DESIGNER");
+        userService.createUser(user);
+        customerService.createCustomer(customer);
+        return "true";
+    }
 }

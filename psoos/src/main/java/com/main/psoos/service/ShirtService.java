@@ -9,4 +9,6 @@ public interface ShirtService {
     public void store(List<ShirtDTO> shirtDTO) throws IOException;
 
     public List<ShirtDTO> getShirtDTOByJoId(String JoId);
+
+    public ShirtDTO getShirtDTOById(Integer Id);
 }

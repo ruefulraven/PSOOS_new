@@ -10,4 +10,6 @@ public interface MugService {
     public void store(List<MugDTO> mugDTOS) throws IOException;
 
     public List<MugDTO> getMugDTOByJoId(String JoId);
+
+    public MugDTO getMugDTOById(Integer Id);
 }

@@ -25,6 +25,7 @@ public class ShirtDTO {
     String fileName;
     Integer price;
     String fileType;
+    String customizationType;
 
     public ShirtDTO(Shirt shirt) {
         this.shirtSize = shirt.getShirtSize();

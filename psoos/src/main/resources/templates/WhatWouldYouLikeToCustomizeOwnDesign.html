@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en"  xmlns:th = "http://thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Customize</title>
+  <!-- Latest compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  <!-- Optional theme -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+</head>
+<style>
+  .accountLink {
+    color: #D768C3 !important;
+  }
+
+  .navbar-right a{
+    font-size:20px;
+    color: black;
+  }
+
+  .navbar{
+    padding-top:15px;
+  }
+
+  .navbar-header{
+    padding-left:25px !important;
+  }
+
+  .centered{
+        float: none !important;
+        margin: 0 auto !important;
+        display:block !important;
+  }
+
+  .form{
+   position: absolute;
+   border-top: 2px solid #D768C3;
+   border-left: 2px solid #D768C3;
+   border-bottom: 2px solid #28B6CF;
+   border-right: 2px solid #28B6CF;
+   padding-bottom: 5px;
+  }
+
+   body{
+    background-image: url("img/background.jpg");
+
+   }
+
+
+.submitBtn {
+    border: 2px solid #D768C3;
+
+    background-color:transparent;
+}
+
+.submitBtn:hover {
+  border:2px solid  #28B6CF;
+
+  background-color:transparent;
+}
+.thumbnail{
+border-top: 2px solid #D768C3;
+   border-left: 2px solid #D768C3;
+   border-bottom: 2px solid #28B6CF;
+   border-right: 2px solid #28B6CF;
+}
+</style>
+<body>
+<nav class="navbar">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#"><img src = "img/logo.jpg" width="150px" height="150px"></a>
+    </div>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a th:href="@{/loginPage}"><b>Home</b></a></li>
+      <li><a href="#"><b>About</b></a></li>
+      <li><a th:href="@{/account}" class = "accountLink"><b>My Account</b></a></li>
+    </ul>
+  </div>
+</nav>
+<!--br -> break line -->
+<br>
+<br>
+<br>
+<div class = "logInDiv text-center container-fluid">
+  <h1>What would like to customize ?</h1>
+  <div class="row">
+    <div class="col-md-4">
+      <div class="thumbnail">
+        <a th:href="@{/uploadDocuments_preDesign}">
+          <img src="img/document.jpg" alt="light" style="width:24%">
+          <div class="caption bg-info">
+            <h2>Document</h2>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="thumbnail">
+        <a th:href="@{/uploadMug_preDesign}">
+          <img src="img/mug.jpg" alt="Nature" style="width:26.5%">
+          <div class="caption bg-info">
+            <h2>Mug</h2>
+          </div>
+        </a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="thumbnail">
+        <a th:href="@{/uploadShirt_preDesign}">
+          <img src="img/shirt.png" alt="Nature" style="width:27.5%">
+          <div class="caption bg-info">
+            <h2>Shirt</h2>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  <!-- Latest compiled and minified JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+</body>
+</html>

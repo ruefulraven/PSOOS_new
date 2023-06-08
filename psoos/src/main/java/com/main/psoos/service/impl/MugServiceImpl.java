@@ -10,8 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,7 +26,8 @@ public class MugServiceImpl implements MugService {
             Mug mug = new Mug(mugDTO);
             System.out.println(" Is empty? "+ mugDTO.getFile().isEmpty());
             mug.setFileName(fileName);
-            mug.setFileData(Files.readString(Paths.get(mugDTO.getFileToUpload().getPath())).getBytes());
+            //mug.setFileData(Files.readString(Paths.get(mugDTO.getFileToUpload().getPath())).getBytes());
+            mug.setFileData(mugDTO.getFile().getBytes());
             mug.setFileType(mugDTO.getFile().getContentType());
             mug.setPrice(mugDTO.getPrice());
             mugRepository.save(mug);
@@ -43,5 +42,10 @@ public class MugServiceImpl implements MugService {
             mugDTOS.add(mugDTO);
         });
         return mugDTOS;
+    }
+
+    @Override
+    public MugDTO getMugDTOById(Integer Id) {
+        return new MugDTO(mugRepository.findById(Id).get());
     }
 }
