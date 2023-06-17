@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.sql.Blob;
 import java.util.List;
 
 
@@ -24,8 +23,10 @@ public class OrderDTO {
     String joId;
     String status;
     Integer totalPrice;
-
     byte[] barcode;
+    String orderStatus;
+    String worker;
+    String workerNotes;
     public OrderDTO(Order order){
         this.orderId = order.getId();
         this.customerId = order.getCustomerId();
@@ -33,5 +34,8 @@ public class OrderDTO {
         this.status = order.getStatus();
         this.totalPrice = order.getTotalPrice();
         this.barcode = order.getBarcode();
+        this.worker = order.getWorker();
+        this.workerNotes = order.getWorkerNotes();
+        this.orderStatus = order.getOrderStatus();
     }
 }

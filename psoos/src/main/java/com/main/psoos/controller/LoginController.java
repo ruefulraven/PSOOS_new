@@ -1,5 +1,6 @@
 package com.main.psoos.controller;
 
+import com.main.psoos.dto.ClientDTO;
 import com.main.psoos.dto.CustomerDTO;
 import com.main.psoos.dto.DocumentDTO;
 import com.main.psoos.dto.LoginDTO;
@@ -10,7 +11,6 @@ import com.main.psoos.dto.ShirtDTO;
 import com.main.psoos.dto.ShirtDesignDTO;
 import com.main.psoos.dto.UserDTO;
 import com.main.psoos.model.Customer;
-import com.main.psoos.model.Document;
 import com.main.psoos.model.MugDesign;
 import com.main.psoos.model.Order;
 import com.main.psoos.model.ShirtDesign;
@@ -24,38 +24,44 @@ import com.main.psoos.service.OrderService;
 import com.main.psoos.service.ShirtDesignService;
 import com.main.psoos.service.ShirtService;
 import com.main.psoos.service.UserService;
-import org.apache.tomcat.util.http.fileupload.FileItem;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
 import org.krysalis.barcode4j.impl.upcean.EAN13Bean;
 import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 @Controller
@@ -92,6 +98,9 @@ public class LoginController {
     private User loggedUser = new User();
     private Map<String, Object> model = new HashMap<>();
 
+    private final String SHIRT_DESIGN_PATH = "C:\\Users\\Axel\\Downloads\\PSOOS_new\\psoos\\src\\main\\resources\\static\\img\\T-Shirt Designs\\";
+    private final String MUG_DESIGN_PATH = "C:\\Users\\Axel\\Downloads\\PSOOS_new\\psoos\\src\\main\\resources\\static\\img\\Mugs Designs\\";
+
     @GetMapping("/loginPage")
     public String loginPage(Model model){
         model.addAttribute("isSuccess", true);
@@ -115,7 +124,7 @@ public class LoginController {
         orders.clear();
         if(orders.isEmpty()) {
             orderService.getAllOrders().stream().
-                    filter(order -> order.getStatus().equals("ACCEPTED") || order.getStatus().equals("")|| order.getStatus() == null).
+                    filter(order -> order.getStatus().equals("CREATED") || order.getStatus().equals("")|| order.getStatus() == null).
                         forEach(order -> {
                             OrderDTO orderDTO = new OrderDTO(order);
                             orderDTO.setMugDTOS(mugService.getMugDTOByJoId(orderDTO.getJoId()));
@@ -123,17 +132,48 @@ public class LoginController {
                             orderDTO.setShirtDTOS(shirtService.getShirtDTOByJoId(orderDTO.getJoId()));
                             orders.add(orderDTO);
                         });
-            orderService.getAllOrders().forEach(order -> {
-                OrderDTO orderDTO = new OrderDTO(order);
-                orderDTO.setMugDTOS(mugService.getMugDTOByJoId(orderDTO.getJoId()));
-                orderDTO.setDocumentDTOS(documentService.getDocumentDTOByJoId(orderDTO.getJoId()));
-                orderDTO.setShirtDTOS(shirtService.getShirtDTOByJoId(orderDTO.getJoId()));
-                orders.add(orderDTO);
-            });
+
         }
         model.addAttribute("orders", orders);
 
+        List<String> workers = userService.getAllActiveUsers().stream()
+                .filter(tempUser -> tempUser.getName().equals("Worker 1")
+                        || tempUser.getName().equals("Worker 2")
+                        || tempUser.getName().equals("Worker 3"))
+                .map(User::getName)
+                .toList();
+        model.addAttribute("workers", workers);
+
         return "admin";
+    }
+
+    @GetMapping("adminManageAccounts")
+    public String getAdminManageAccounts(Model model, User user){
+        Customer customer = customerService.getCustomerByName(user.getName());
+        model.addAttribute("name", loggedUser.getName());
+        model.addAttribute("customer", customer);
+        List<User> users = userService.getAllActiveUsers();
+        List<UserDTO> usersDTO = users.stream().map(UserDTO::new).toList();
+
+        List<ClientDTO> clientDTOS = new ArrayList<>();
+        usersDTO.forEach(userDTO -> {
+            ClientDTO client = new ClientDTO();
+            client.setName(userDTO.getName());
+            client.setPassword(userDTO.getPassword());
+            client.setUserId(userDTO.getUserId());
+            client.setDeleted(userDTO.getDeleted());
+            client.setUserName(userDTO.getUserName());
+            Customer tempCustomer = customerService.getCustomerByName(userDTO.getName());
+            client.setCustomerDTO(new CustomerDTO(tempCustomer));
+            clientDTOS.add(client);
+        });
+
+        model.addAttribute("clients", clientDTOS);
+        model.addAttribute("password", loggedUser.getPassword());
+        model.addAttribute("users", usersDTO);
+
+
+        return "admin_manage_accounts";
     }
 
     @GetMapping("/adminDesignerPage")
@@ -284,9 +324,37 @@ public class LoginController {
         return "createAccount";
     }
 
+    @PostMapping({"/createAccountAdmin"})
+    public String createAccountAdmin(CustomerDTO customerDTO, Model model) {
+        System.out.println(customerDTO.getCustomerEmail() + customerDTO.getCustomerName());
+
+        boolean isSuccess = true;
+        if(customerDTO.getCustomerName().equals("")){
+            model.addAttribute("nameBlank",true);
+            isSuccess = false;
+        }
+        if(customerDTO.getCustomerName().equals("")){
+            model.addAttribute("nameBlank",true);
+            isSuccess = false;
+        }
+
+        if(isSuccess){
+            Customer customer = new Customer(customerDTO);
+            UserDTO userDTO = new UserDTO(customerDTO);
+            User user = new User(userDTO);
+            user.setRole("USER_CLIENT");
+            userService.createUser(user);
+            customerService.createCustomer(customer);
+        }
+
+        model.addAttribute("isSuccess",isSuccess);
+        return adminPage(model, loggedUser);
+    }
+
     @PostMapping("/updateAccount")
     public String updateAccount(CustomerDTO customerDTO, Model model){
         Customer tempCustomer = customerService.getCustomerByName(customerDTO.getCustomerName());
+        System.out.println(customerDTO.getCustomerPhoneNumber());
         tempCustomer.setCustomerPhoneNumber(customerDTO.getCustomerPhoneNumber());
         tempCustomer.setCustomerName(customerDTO.getCustomerName());
         tempCustomer.setCustomerEmail(customerDTO.getCustomerEmail());
@@ -301,6 +369,26 @@ public class LoginController {
         model.addAttribute("customer", tempCustomer);
 
         return "account";
+    }
+
+    @PostMapping("/updateAccountAdmin")
+    public String updateAccountAdmin(CustomerDTO customerDTO, Model model){
+        Customer tempCustomer = customerService.getCustomerByName(customerDTO.getCustomerName());
+        System.out.println(customerDTO.getCustomerPhoneNumber());
+        tempCustomer.setCustomerPhoneNumber(customerDTO.getCustomerPhoneNumber());
+        tempCustomer.setCustomerName(customerDTO.getCustomerName());
+        tempCustomer.setCustomerEmail(customerDTO.getCustomerEmail());
+        tempCustomer.setCustomerAddress(customerDTO.getCustomerHomeAddress());
+        User tempUser = userService.getUserByName(tempCustomer.getCustomerName());
+
+        //Updating of User and Customer Credentials
+        userService.createUser(tempUser);
+        customerService.updateCustomerDetails(tempCustomer);
+        User user = userService.getUserByName(tempCustomer.getCustomerName());
+        model.addAttribute("password", user.getPassword());
+        model.addAttribute("customer", tempCustomer);
+
+        return adminPage(model, loggedUser);
     }
 
     @GetMapping("/myOrdersPage")
@@ -347,7 +435,9 @@ public class LoginController {
     }
 
     @GetMapping("/uploadShirt")
-    public String uploadShirtPage(){
+    public String uploadShirtPage(Model model){
+        model.addAttribute("designs", getAllShirtDesigns());
+
         return "uploadShirt";
     }
 
@@ -358,7 +448,6 @@ public class LoginController {
 
     @PostMapping("/addDocument")
     public String addDocument(DocumentDTO tempDocument, Model model) throws IOException {
-
         addDocumentOrder(tempDocument);
         model.addAttribute("orders", documentOrders);
         model.addAttribute("mugOrders", mugOrders);
@@ -370,7 +459,6 @@ public class LoginController {
                 mugOrders);
 
         model.addAttribute("totalPrice", totalPrice);
-
         return "cartOrders";
     }
 
@@ -385,7 +473,6 @@ public class LoginController {
                 shirtOrders,
                 documentOrders,
                 mugOrders);
-        System.out.println(totalPrice + "HOHO");
         model.addAttribute("totalPrice", totalPrice);
         return "cartOrders";
     }
@@ -400,14 +487,18 @@ public class LoginController {
                 shirtOrders,
                 documentOrders,
                 mugOrders);
-        System.out.println(totalPrice + "HOHO");
+
         model.addAttribute("totalPrice", totalPrice);
         return "cartOrders";
     }
 
     @PostMapping("/submitOrder")
-    public String submitOrder(Model model)throws IOException {
+    public String submitOrder(OrderDTO tempOrderDTO, Model model)throws IOException {
         OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setOrderStatus(tempOrderDTO.getOrderStatus());
+        orderDTO.setWorker(tempOrderDTO.getWorker());
+        //orderDTO.setWorkerNotes(tempOrderDTO.getWorkerNotes());
+
         orderDTO.setMugDTOS(mugOrders);
         orderDTO.setDocumentDTOS(documentOrders);
         orderDTO.setShirtDTOS(shirtOrders);
@@ -447,8 +538,6 @@ public class LoginController {
         customerOrders.forEach(order -> {
             customerOrderDTO.add(new OrderDTO(order));
         });
-
-
 
         model.addAttribute("orders", customerOrderDTO);
         mugOrders = null;
@@ -546,7 +635,6 @@ public class LoginController {
             Path filePath = uploadPath.resolve(fileName);
             CustomMultipartFile customMultipartFile = new CustomMultipartFile(filePath);
             dto.setType(customMultipartFile.getContentType());
-            dto.setData(customMultipartFile);
 
             ShirtDesign design = new ShirtDesign(dto);
             shirtDesignService.saveDesign(design);
@@ -574,8 +662,6 @@ public class LoginController {
             Path filePath = uploadPath.resolve(fileName);
             CustomMultipartFile customMultipartFile = new CustomMultipartFile(filePath);
             dto.setType(customMultipartFile.getContentType());
-            dto.setData(customMultipartFile);
-
             MugDesign design = new MugDesign(dto);
             mugDesignService.saveDesign(design);
             System.out.println("succesfulyy saved: " + design.getName());
@@ -589,28 +675,40 @@ public class LoginController {
     public void addShirtOrder(ShirtDTO tempShirt) throws IOException {
         tempShirt.setOrderType("SHIRT");
 
-            String uploadDir = "C:\\Users\\Axel\\Downloads\\" + loggedUser.getUserId();
-            String fileName = StringUtils.cleanPath(tempShirt.getFile().getOriginalFilename());
-            Path uploadPath = Paths.get(uploadDir);
-            if(!Files.exists(uploadPath)){
-                Files.createDirectory(uploadPath);
-            }
-            try{
-                File file = new File(uploadDir +"\\" +fileName);
-                String mimeType = Files.probeContentType(uploadPath);
-                DiskFileItem fileItem = new DiskFileItem(fileName, mimeType, false, file.getName(), (int) file.length(), file.getParentFile());
+            if(tempShirt.getFile() == null){
+
+                String customizedDesignName = tempShirt.getCustomizationType()+".png";
+                File file = new File(SHIRT_DESIGN_PATH + customizedDesignName);
+                Path downloadPath = Paths.get(SHIRT_DESIGN_PATH);
+                String mimeType = Files.probeContentType(downloadPath);
+                Path filePath = downloadPath.resolve(customizedDesignName);
+                DiskFileItem fileItem = new DiskFileItem(customizedDesignName, mimeType, false, file.getName(), (int) file.length(), file.getParentFile());
                 fileItem.getOutputStream();
-                tempShirt.setFileToUpload(file);
-                InputStream inputStream = tempShirt.getFile().getInputStream();
-                Path filePath = uploadPath.resolve(fileName);
                 CustomMultipartFile customMultipartFile = new CustomMultipartFile(filePath);
                 tempShirt.setFile(customMultipartFile);
-                Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            }else{
+                try{
+                    String uploadDir = "C:\\Users\\Axel\\Downloads\\" + loggedUser.getUserId();
+                    String fileName = StringUtils.cleanPath(tempShirt.getFile().getOriginalFilename());
+                    Path uploadPath = Paths.get(uploadDir);
+                    if(!Files.exists(uploadPath)){
+                        Files.createDirectory(uploadPath);
+                    }
+                    File file = new File(uploadDir +"\\" +fileName);
+                    String mimeType = Files.probeContentType(uploadPath);
+                    DiskFileItem fileItem = new DiskFileItem(fileName, mimeType, false, file.getName(), (int) file.length(), file.getParentFile());
+                    fileItem.getOutputStream();
+                    tempShirt.setFileToUpload(file);
+                    InputStream inputStream = tempShirt.getFile().getInputStream();
+                    Path filePath = uploadPath.resolve(fileName);
+                    CustomMultipartFile customMultipartFile = new CustomMultipartFile(filePath);
+                    tempShirt.setFile(customMultipartFile);
+                    Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-            }catch(IOException e ){
-                throw new IOException("ERROR IS: " + e.getMessage() + e.getLocalizedMessage() );
+                }catch(IOException e ){
+                    throw new IOException("ERROR IS: " + e.getMessage() + e.getLocalizedMessage() );
+                }
             }
-
         shirtOrders.add(tempShirt);
     }
 
@@ -632,6 +730,16 @@ public class LoginController {
         orderService.saveOrders(order);
 
         return adminPage(model, loggedUser);
+    }
+
+    @GetMapping("/user/delete/{name}")
+    public String deleteUser(@PathVariable("name") String name, Model model){
+        User user = userService.getUserByName(name);
+        user.setIsDeleted(true);
+        userService.createUser(user);
+
+        return getAdminManageAccounts(model, loggedUser);
+
     }
 
     public Integer getTotalPrice(List<ShirtDTO> shirts, List<DocumentDTO> documents, List<MugDTO> mugs ){
@@ -708,5 +816,140 @@ public class LoginController {
         mugOrders = null;
         shirtOrders = null;
         documentOrders = null;
+    }
+
+    @GetMapping("adminUploadShirtDesign")
+    public String adminUploadShirtDesign(Model model){
+        model.addAttribute("designs", getAllShirtDesigns());
+        return "admin_upload_shirt_design";
+    }
+
+    @GetMapping("adminUploadMugDesign")
+    public String adminUploadMugDesign(Model model){
+        model.addAttribute("designs", getAllMugDesigns());
+        return "admin_upload_mug_design";
+    }
+
+    List<ShirtDesignDTO> getAllShirtDesigns(){
+        List<ShirtDesignDTO> shirtDesigns = shirtDesignService.getAllDesign().
+                stream().map(ShirtDesignDTO::new).toList();
+
+        shirtDesigns.forEach(design -> {
+
+            String customizedDesignName = design.getName();
+            File file = new File(SHIRT_DESIGN_PATH + customizedDesignName);
+            Path downloadPath = Paths.get(SHIRT_DESIGN_PATH);
+            String mimeType = null;
+            try {
+                mimeType = Files.probeContentType(downloadPath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Path filePath = downloadPath.resolve(customizedDesignName);
+            DiskFileItem fileItem = new DiskFileItem(customizedDesignName, mimeType, false, file.getName(), (int) file.length(), file.getParentFile());
+            fileItem.getOutputStream();
+            CustomMultipartFile customMultipartFile = new CustomMultipartFile(filePath);
+            String path = SHIRT_DESIGN_PATH+ design.getName().replaceAll(" ", "%20");
+            design.setPath("http://localhost:8081/" + design.getName());
+            design.setName(design.getName());
+
+        });
+        return shirtDesigns;
+    }
+
+
+    List<MugDesignDTO> getAllMugDesigns(){
+        List<MugDesignDTO> shirtDesigns = mugDesignService.getAllMugDesigns().
+                stream().map(MugDesignDTO::new).toList();
+
+        shirtDesigns.forEach(design -> {
+
+            String customizedDesignName = design.getName();
+            File file = new File(MUG_DESIGN_PATH + customizedDesignName);
+            Path downloadPath = Paths.get(MUG_DESIGN_PATH);
+            String mimeType = null;
+            try {
+                mimeType = Files.probeContentType(downloadPath);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            Path filePath = downloadPath.resolve(customizedDesignName);
+            DiskFileItem fileItem = new DiskFileItem(customizedDesignName, mimeType, false, file.getName(), (int) file.length(), file.getParentFile());
+            fileItem.getOutputStream();
+            CustomMultipartFile customMultipartFile = new CustomMultipartFile(filePath);
+            String path = MUG_DESIGN_PATH+ design.getName().replaceAll(" ", "%20");
+            design.setPath("http://localhost:8081/" + design.getName());
+            design.setName(design.getName());
+
+        });
+        return shirtDesigns;
+    }
+
+    @PostMapping("addShirtDesign")
+    public String addShirtDesign(List<MultipartFile> files, Model model) throws IOException {
+
+        files.forEach(file -> {
+            try{
+                ShirtDesignDTO shirtDesignDTO = new ShirtDesignDTO();
+                String uploadDir = SHIRT_DESIGN_PATH
+                        + file.getOriginalFilename();
+                String contentType = StringUtils.getFilenameExtension(file.getOriginalFilename());
+                File tempFile = new File(uploadDir);
+                CustomMultipartFile customMultipartFile = new CustomMultipartFile(tempFile.toPath());
+                file.transferTo(tempFile);
+                //Set contents of new Design
+                shirtDesignDTO.setName(tempFile.getName());
+                shirtDesignDTO.setType(contentType);
+
+                //Save Design
+                shirtDesignService.saveDesign(new ShirtDesign(shirtDesignDTO));
+            }
+            catch(IOException e){
+                System.out.println( "ERROR: "+e.getMessage());
+            }
+        });
+
+        return adminUploadShirtDesign(model);
+    }
+
+    @PostMapping("addMugDesign")
+    public String addMugDesign(List<MultipartFile> files, Model model) throws IOException {
+
+        files.forEach(file -> {
+            try{
+                MugDesignDTO mugDesignDTO = new MugDesignDTO();
+                String uploadDir = MUG_DESIGN_PATH
+                        + file.getOriginalFilename();
+                String contentType = StringUtils.getFilenameExtension(file.getOriginalFilename());
+                File tempFile = new File(uploadDir);
+                file.transferTo(tempFile);
+                //Set contents of new Design
+                mugDesignDTO.setName(tempFile.getName());
+                mugDesignDTO.setType(contentType);
+
+                //Save Design
+                mugDesignService.saveDesign(new MugDesign(mugDesignDTO));
+            }
+            catch(IOException e){
+                System.out.println( "ERROR: "+e.getMessage());
+            }
+        });
+
+        return adminUploadMugDesign(model);
+    }
+
+    @GetMapping("/design/shirt/delete/{id}")
+    public String deleteShirtDesign(@PathVariable("id") Integer id, Model model) throws IOException {
+        shirtDesignService.deleteDesignById(id);
+
+        return adminUploadShirtDesign(model);
+    }
+
+
+    @GetMapping("/design/mug/delete/{id}")
+    public String deleteMugDesign(@PathVariable("id") Integer id, Model model) throws IOException {
+        mugDesignService.deleteDesignById(id);
+
+        return adminUploadShirtDesign(model);
     }
 }

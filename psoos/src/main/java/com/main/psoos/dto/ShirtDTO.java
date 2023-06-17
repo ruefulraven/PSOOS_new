@@ -19,7 +19,6 @@ public class ShirtDTO {
     String jobOrder;
     private String printType;
     private Integer noOfShirt;
-
     MultipartFile file;
     File fileToUpload;
     String fileName;

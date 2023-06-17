@@ -55,6 +55,13 @@ public class Order {
     @Column(name = "barcode")
     byte[] barcode;
 
+    @Column(name = "order_status")
+    String orderStatus;
+    @Column(name = "worker")
+    String worker;
+    @Column(name = "worker_notes")
+    String workerNotes;
+
     public Order(OrderDTO order){
         //this.id = order.getOrderId();
         this.customerId = order.getCustomerId();
@@ -62,5 +69,8 @@ public class Order {
         this.status = order.getStatus();
         this.totalPrice = order.getTotalPrice();
         this.barcode = order.getBarcode();
+        this.worker = order.getWorker();
+        this.workerNotes = order.getWorkerNotes();
+        this.orderStatus = order.getOrderStatus();
     }
 }

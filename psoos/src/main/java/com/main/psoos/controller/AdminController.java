@@ -70,4 +70,58 @@ public class AdminController {
         customerService.createCustomer(customer);
         return "true";
     }
+
+    @GetMapping("/createAdminWorker")
+    public String createAdminWorker(){
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setCustomerName("Worker 1");
+        customerDTO.setCustomerEmail("worker1@gmail.com");
+        customerDTO.setCustomerPhoneNumber("093605041");
+        customerDTO.setCustomerHomeAddress("Sample Address");
+
+        Customer customer = new Customer(customerDTO);
+        UserDTO userDTO = new UserDTO(customerDTO);
+        User user = new User(userDTO);
+        user.setPassword("admin");
+        user.setRole("USER_WORKER");
+        userService.createUser(user);
+        customerService.createCustomer(customer);
+        return "true";
+    }
+
+    @GetMapping("/createAdminWorker2")
+    public String createAdminWorker2(){
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setCustomerName("Worker 2");
+        customerDTO.setCustomerEmail("worker2@gmail.com");
+        customerDTO.setCustomerPhoneNumber("093605041");
+        customerDTO.setCustomerHomeAddress("Sample Address");
+
+        Customer customer = new Customer(customerDTO);
+        UserDTO userDTO = new UserDTO(customerDTO);
+        User user = new User(userDTO);
+        user.setPassword("admin");
+        user.setRole("USER_WORKER");
+        userService.createUser(user);
+        customerService.createCustomer(customer);
+        return "true";
+    }
+
+    @GetMapping("/createAdminWorker3")
+    public String createAdminWorker3(){
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setCustomerName("Worker 3");
+        customerDTO.setCustomerEmail("worker3@gmail.com");
+        customerDTO.setCustomerPhoneNumber("093605041");
+        customerDTO.setCustomerHomeAddress("Sample Address");
+
+        Customer customer = new Customer(customerDTO);
+        UserDTO userDTO = new UserDTO(customerDTO);
+        User user = new User(userDTO);
+        user.setPassword("admin");
+        user.setRole("USER_WORKER");
+        userService.createUser(user);
+        customerService.createCustomer(customer);
+        return "true";
+    }
 }

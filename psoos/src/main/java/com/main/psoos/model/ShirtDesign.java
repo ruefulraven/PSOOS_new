@@ -27,16 +27,17 @@ public class ShirtDesign {
 
     @Column(name = "name")
     String name;
-    @Column(name = "data")
-    @Lob
-    byte[] data;
     @Column(name = "type")
     String type;
 
+    @Column(name = "is_deleted")
+    boolean isDeleted;
+
     public ShirtDesign(ShirtDesignDTO shirt) throws IOException {
-        this.data = shirt.getData().getBytes();
+        this.id = shirt.getId();
         this.name = shirt.getName();
         this.type = shirt.getType();
+        this.isDeleted = shirt.isDeleted();
 
     }
 }

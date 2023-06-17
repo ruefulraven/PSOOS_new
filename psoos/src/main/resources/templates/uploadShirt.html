@@ -72,7 +72,7 @@ border-top: 2px solid #D768C3;
 <nav class="navbar">
   <div class="container-fluid">
     <div class="navbar-header">
-      <a class="navbar-brand" href="#"><img src = "../img/logo1.jpg" width="150px" height="150px"></a>
+      <a class="navbar-brand" href="#"><img src = "/../img/logo.jpg" width="150px" height="150px"></a>
     </div>
     <ul class="nav navbar-nav navbar-right">
       <li><a th:href="@{/loginPage}"><b>Home</b></a></li>
@@ -88,10 +88,17 @@ border-top: 2px solid #D768C3;
   <form class = "form " action="" th:action = "@{/addShirt}" method = "post" enctype="multipart/form-data">
   <div class = "row">
     <div class = "col-md-6">
-      <img src="/img/tshirt1.jpg" alt="Lights" style="width:75%">
+      <img src="/img/shirt.png" alt="Lights" style="width:75%">
     </div>
     <div class = "col-md-6">
       <h1>T-SHIRT</h1>
+      Customize
+      <div class="btn-group btn-group-toggle" data-toggle="buttons">
+        <select  class="form-control btn btn-outline-primary" id = "customizeOption" th:name = "printType" onchange="toggleCustomize(this)">
+          <option value = "yes">YES</option>
+          <option value = "no">NO</option>
+        </select>
+      </div>
       <div class="mb-3">
 <!--        <input class="form-control" type="file" id="formFile" th:name = "file" >-->
       </div>
@@ -101,7 +108,7 @@ border-top: 2px solid #D768C3;
           <h5><b>Customized</b></h5>
         </div>
         <div class = "col-md-6">
-          <select  class="form-control" id = "customize" th:name = "printType" onchange="customized()">
+          <select  class="form-control"  id = "customize" th:name = "printType" onchange="customized()">
             <option value = "1">Rubberized, 10 pcs</option>
             <option value = "2">DTF, 10 pcs</option>
             <option value = "0">None</option>
@@ -174,18 +181,13 @@ border-top: 2px solid #D768C3;
                 </div>
                 <div class="modal-body">
                   <div id="thumbs">
-                    <!-- Dynamically created thumbnails start -->
-                    <img id="pic-1" width = "200px" height = "200px" src="C:\Users\Axel\Downloads\PSOOS_new\psoos\src\main\resources\static\img\T-Shirt Designs\T-shirt Designs - 1.png">
-                    <img id="pic-2" width = "200px" height = "200px" src="C:\Users\Axel\Downloads\PSOOS_new\psoos\src\main\resources\static\img\T-Shirt Designs\T-shirt Designs - 2.png">
-                    <img id="pic-3" width = "200px" height = "200px" src="C:\Users\Axel\Downloads\PSOOS_new\psoos\src\main\resources\static\img\T-Shirt Designs\T-shirt Designs - 3.png">
-                    <img id="pic-4" width = "200px" height = "200px" src="C:\Users\Axel\Downloads\PSOOS_new\psoos\src\main\resources\static\img\T-Shirt Designs\T-shirt Designs - 4.png">
-                    <img id="pic-5" width = "200px" height = "200px" src="C:\Users\Axel\Downloads\PSOOS_new\psoos\src\main\resources\static\img\T-Shirt Designs\T-shirt Designs - 5.png">
-                    <img id="pic-6" width = "200px" height = "200px" src="C:\Users\Axel\Downloads\PSOOS_new\psoos\src\main\resources\static\img\T-Shirt Designs\T-shirt Designs - 6.png">
-<!--                    <img id="pic-2" width = "50px" height = "50px"  src="http://lorempixum.com/200/200/animals/2/animal2.jpg">-->
-<!--                    <img id="pic-3" width = "50px" height = "50px"  src="http://lorempixum.com/200/200/animals/2/animal2.jpg">-->
-<!--                    <img id="pic-4" width = "50px" height = "50px"  src="http://lorempixum.com/200/200/animals/2/animal2.jpg">-->
-<!--                    <img id="pic-5" src="http://lorempixum.com/200/200/animals/3/animal3DOTjpg">-->
-                    <!-- Dynamically created thumbnails end -->
+                    <div class = "row">
+                      <div  th:each = "design : ${designs}">
+                        <div class = "col-md-4">
+                          <img th:src = "${design.path}"  height = "100px" width = "100px" src=""/>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <div class="modal-footer">
@@ -206,9 +208,9 @@ border-top: 2px solid #D768C3;
                 $this.addClass('border-highlight');
 
                 // Changes the value of the form field "animal" to the file name shown in the image.
-                $('[name="animal"]').val( $this.attr('id').substring(0)
+                $('[name="customizationType"]').val( $this.attr('id').substring(0)
                                         );
-                //alert('You picked ' + $('[name="animal"]').val() );
+                //alert('You picked ' + $('[name="customizationType"]').val() );
             });
 
           </script>
@@ -245,8 +247,29 @@ border-top: 2px solid #D768C3;
                   document.getElementById('type').value = "Rubberized";
                   document.getElementById('price').value = 0;
                 }
+              }
+
+              function toggleCustomize(selectField){
+                var value = selectField.value;
+                if(value === "yes"){
+                  document.getElementById('type').disabled = false;
+                  document.getElementById('customize').disabled = false;
+                  document.getElementById('noOfShirt').disabled = false;
+                  document.getElementById('type').disabled = false;
+                  }
+                if(value === "no"){
+                  document.getElementById('type').disabled = "true";
+                  document.getElementById('customize').disabled = "true";
+                  document.getElementById('noOfShirt').disabled = "true";
+                  document.getElementById('type').disabled = "true";
+                  document.getElementById('type').value = "Rubberized";
+                  document.getElementById('noOfShirt').value = 1;
+                  calculate();
+                }
+                console.log(value);
 
               }
+
         </script>
 
     </div>

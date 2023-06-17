@@ -6,6 +6,8 @@ import com.main.psoos.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -27,5 +29,10 @@ public class UserServiceImpl implements UserService {
     public User getUserByName(String name) {
         User tempUser = usersRepository.findByName(name);
         return tempUser;
+    }
+
+    @Override
+    public List<User> getAllActiveUsers() {
+        return usersRepository.findByIsDeletedFalse();
     }
 }

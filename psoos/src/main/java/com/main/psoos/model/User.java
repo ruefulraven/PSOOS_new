@@ -29,9 +29,18 @@ public class User {
     @Column(name = "role")
     private String role;
 
+    @Column(name = "is_deleted")
+    private boolean isDeleted;
+
     public User (UserDTO userDTO){
         this.name = userDTO.getName();
         this.password = userDTO.getPassword();
         this.userName = userDTO.getUserName();
+        this.isDeleted = userDTO.getDeleted();
+
+    }
+
+    public void setIsDeleted(boolean isDeleted){
+        this.isDeleted = isDeleted;
     }
 }

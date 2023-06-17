@@ -27,14 +27,15 @@ public class MugDesign {
 
     @Column(name = "name")
     String name;
-    @Column(name = "data")
-    @Lob
-    byte[] data;
+
     @Column(name = "type")
     String type;
 
+    @Column(name = "is_deleted")
+    boolean isDeleted;
+
     public MugDesign(MugDesignDTO mug) throws IOException {
-        this.data = mug.getData().getBytes();
+        this.isDeleted = mug.isDeleted();
         this.name = mug.getName();
         this.type = mug.getType();
     }
