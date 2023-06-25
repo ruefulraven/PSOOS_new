@@ -376,7 +376,7 @@ public class LoginController {
         model.addAttribute("password", user.getPassword());
         model.addAttribute("customer", tempCustomer);
 
-        return "account";
+        return accountPage(model, user);
     }
 
     @PostMapping("/updateAccountAdmin")
@@ -409,7 +409,7 @@ public class LoginController {
             customerOrderDTO.add(new OrderDTO(order));
         });
         model.addAttribute("orders", customerOrderDTO);
-        return "myOrders";
+        return myOrdersPage(model);
     }
 
     @GetMapping("/homePage")
@@ -843,12 +843,18 @@ public class LoginController {
                 .body(content);
     }
 
-    public void logout(){
+
+    @GetMapping("/logout")
+    public String logout(Model model){
         loggedUser = null;
         loggedCustomer = null;
         mugOrders = null;
         shirtOrders = null;
         documentOrders = null;
+        orders = null;
+        this.model = null;
+        model.addAttribute("logoutMessage","User has successfully logout" );
+        return loginPage(model);
     }
 
     @GetMapping("adminUploadShirtDesign")
