@@ -62,7 +62,7 @@ border-top: 2px solid #D768C3;
 <nav class="navbar">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a class="navbar-brand" href="#"><img src = "../img/logo1.jpg" width="150px" height="150px"></a>
+            <a class="navbar-brand" href="#"><img src = "/../img/logo1.jpg" width="150px" height="150px"></a>
         </div>
         <ul class="nav navbar-nav navbar-right">
             <li><a th:href="@{/loginPage}"><b>Home</b></a></li>
@@ -82,7 +82,7 @@ border-top: 2px solid #D768C3;
         <div class="col-md-6">
             <div class="thumbnail">
                 <a href="">
-                    <img src="/img/mugdesign.jpg" alt="Lights" style="width:40%">
+                    <img src="/img/mug.jpg" alt="Lights" style="width:40%">
                     <div class="caption">
                         <h2>Design Preview</h2>
                     </div>
@@ -117,6 +117,7 @@ border-top: 2px solid #D768C3;
                         <option>Custom</option>
                     </select>
                 </div>
+
             </div>
             <div class = "row">
                 <br>
@@ -131,11 +132,61 @@ border-top: 2px solid #D768C3;
                 </div>
             </div>
             <div class = "row">
-                <br>
                 <div class = "col-md-6">
-                    <h5><b>Total Price</b></h5>
+
                 </div>
+            </div>
+
+        </div>
+            <div class = "row">
                 <div class = "col-md-6">
+                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">View Customizations</button>
+                    <input type="hidden" name="customizationType" th:name = "customizationType">
+                    <div id="myModal" class="modal fade" role="dialog">
+                        <div class="modal-dialog">
+
+                            <!-- Modal content-->
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                    <h4 class="modal-title">Customizations</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div id="thumbs">
+                                        <div class = "row">
+                                            <div  th:each = "design : ${designs}">
+                                                <div class = "col-md-4">
+                                                    <img th:src = "${design.path}"  height = "100px" width = "100px" src=""/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <script>
+                    $('#thumbs').delegate('img', 'click', function() {
+                        var $this = $(this);
+                        // Clear formatting
+                        $('#thumbs img').removeClass('border-highlight');
+
+                        // Highlight with coloured border
+                        $this.addClass('border-highlight');
+
+                        // Changes the value of the form field "animal" to the file name shown in the image.
+                        $('[name="customizationType"]').val( $this.attr('id').substring(0)
+                                                );
+                        //alert('You picked ' + $('[name="customizationType"]').val() );
+                    });
+
+                  </script>
+                    <h5><b>Total Price</b></h5>
                     <input type = "number" id = "price" th:name = "price" readonly>
                 </div>
             </div>
@@ -173,8 +224,10 @@ border-top: 2px solid #D768C3;
         </script>
 
         <input type = "submit" placeholder = "Submit Order" class = "btn btn-primary" />
-    </div>
     </form>
+    </div>
+
+
 
 </div>
 </div>

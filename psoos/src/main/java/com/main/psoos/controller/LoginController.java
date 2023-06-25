@@ -1,6 +1,7 @@
 package com.main.psoos.controller;
 
 import com.main.psoos.dto.ClientDTO;
+import com.main.psoos.dto.CsvDTO;
 import com.main.psoos.dto.CustomerDTO;
 import com.main.psoos.dto.DocumentDTO;
 import com.main.psoos.dto.LoginDTO;
@@ -15,6 +16,7 @@ import com.main.psoos.model.MugDesign;
 import com.main.psoos.model.Order;
 import com.main.psoos.model.ShirtDesign;
 import com.main.psoos.model.User;
+import com.main.psoos.service.CsvService;
 import com.main.psoos.service.CustomMultipartFile;
 import com.main.psoos.service.CustomerService;
 import com.main.psoos.service.DocumentService;
@@ -24,19 +26,19 @@ import com.main.psoos.service.OrderService;
 import com.main.psoos.service.ShirtDesignService;
 import com.main.psoos.service.ShirtService;
 import com.main.psoos.service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.apache.tomcat.util.http.fileupload.disk.DiskFileItem;
 import org.krysalis.barcode4j.impl.upcean.EAN13Bean;
 import org.krysalis.barcode4j.output.bitmap.BitmapCanvasProvider;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ClassPathResource;
+
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,23 +47,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 
 @Controller
@@ -89,6 +86,9 @@ public class LoginController {
 
     @Autowired
     MugDesignService mugDesignService;
+
+    @Autowired
+    CsvService csvService;
 
     List<DocumentDTO> documentOrders = new ArrayList<>();
     List<MugDTO> mugOrders = new ArrayList<>();
@@ -142,6 +142,7 @@ public class LoginController {
                         || tempUser.getName().equals("Worker 3"))
                 .map(User::getName)
                 .toList();
+        model.addAttribute("role", user.getRole());
         model.addAttribute("workers", workers);
 
         return "admin";
@@ -213,7 +214,7 @@ public class LoginController {
         orders.clear();
         orderService.getAllOrders().
                 stream().
-                    filter(order -> order.getStatus().equals("PENDING") || order.getStatus().equals("ACCEPTED")).
+                    filter(order -> order.getStatus().equals("PENDING") || order.getStatus().equals("ACCEPTED") && order.getWorker().equals(loggedUser.getName())).
                         forEach(tempOrder -> {
                             OrderDTO orderDTO = new OrderDTO(tempOrder);
                                 orderDTO.setMugDTOS(mugService.getMugDTOByJoId(orderDTO.getJoId()));
@@ -279,7 +280,14 @@ public class LoginController {
                 this.model.putAll(model.asMap());
 
                 return adminPage(model, tempUser);
-            case "USER_CLIENT" :
+            case "USER_WORKER":
+                loggedUser = tempUser;
+                loggedCustomer = customerService.getCustomerByName(tempUser.getName());
+                this.model.putAll(model.asMap());
+
+                return adminPendingOrdersPage(model, tempUser);
+
+            case "USER_CLIENT"  :
                 isSuccess = true;
                 loggedUser = tempUser;
                 loggedCustomer = customerService.getCustomerByName(tempUser.getName());
@@ -420,7 +428,8 @@ public class LoginController {
     }
 
     @GetMapping("/uploadMug")
-    public String uploadMugPage(){
+    public String uploadMugPage(Model model){
+        model.addAttribute("designs", getAllShirtDesigns());
         return "uploadMug";
     }
 
@@ -732,6 +741,30 @@ public class LoginController {
         return adminPage(model, loggedUser);
     }
 
+    @GetMapping("/order/{status}/{jobId}/{worker}")
+    public String updateJobOrderStatusToOngoing(@PathVariable("status") String status, @PathVariable("jobId") String jobId,
+                                                @PathVariable("worker") String worker, Model model){
+
+        Order order = orderService.findByJobId(jobId);
+        order.setWorker(worker);
+        order.setStatus(status);
+        orderService.saveOrders(order);
+
+        return adminPage(model, loggedUser);
+    }
+
+
+
+    @PostMapping("/order/{jobId}")
+    public String updateJobOrderStatus(OrderDTO orderDTO, Model model){
+        Order order = orderService.findByJobId(orderDTO.getJoId());
+        order.setOrderStatus(orderDTO.getOrderStatus());
+        order.setWorkerNotes(orderDTO.getWorkerNotes());
+        orderService.saveOrders(order);
+
+        return adminPendingOrdersPage(model, loggedUser);
+    }
+
     @GetMapping("/user/delete/{name}")
     public String deleteUser(@PathVariable("name") String name, Model model){
         User user = userService.getUserByName(name);
@@ -951,5 +984,14 @@ public class LoginController {
         mugDesignService.deleteDesignById(id);
 
         return adminUploadShirtDesign(model);
+    }
+
+    @PostMapping("export-csv")
+    public void exportCSV(CsvDTO csvDTO, HttpServletResponse response) throws IOException {
+        response.setContentType("text/csv");
+        response.setHeader("Content-Disposition", "attachment; filename=\"orders" + ".csv\"");
+        List<Order> retrievedOrders = orderService.
+                getAllOrdersByDate(csvDTO.getDateFrom(), csvDTO.getDateTo());
+        csvService.printOrders(retrievedOrders,response.getWriter());
     }
 }

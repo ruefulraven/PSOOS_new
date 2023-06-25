@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <title>Admin Page</title>
+
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
     <!-- Optional theme -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <link th:rel="stylesheet" th:href="@{assets/daterangepicker/daterangepicker.css}"/>
+    <link th:rel="stylesheet" th:href="@{webjars/font-awesome/5.11.2/css/all.css} "/>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
 </head>
 <style>
@@ -236,14 +239,18 @@ border-top: 2px solid #D768C3;
     <div id="sidebar-wrapper">
         <nav id="spy">
             <ul class="sidebar-nav nav">
-                <li class="sidebar-brand">
-                    <a th:href = "@{'/adminPage'}"><span class="fa fa-home solo">NEW</span></a>
-                </li>
-                <li>
-                    <a th:href="@{'/adminPendingOrdersPage'}" data-scroll>
-                        <span class="fa fa-anchor solo">PENDING</span>
-                    </a>
-                </li>
+                <div th:if = "${role} == 'USER_ADMIN'">
+                    <li class="sidebar-brand">
+                        <a th:href = "@{'/adminPage'}"><span class="fa fa-home solo">NEW</span></a>
+                    </li>
+                </div>
+                <div th:if = "${role} == 'USER_WORKER'">
+                    <li>
+                        <a th:href="@{'/adminPendingOrdersPage'}" data-scroll>
+                            <span class="fa fa-anchor solo">PENDING</span>
+                        </a>
+                    </li>
+                </div>
                 <li>
                     <a th:href="@{'/adminCompletedOrdersPage'}" data-scroll>
                         <span class="fa fa-anchor solo">COMPLETED</span>
@@ -273,7 +280,6 @@ border-top: 2px solid #D768C3;
             </ul>
         </nav>
     </div>
-
     <!-- Page content -->
     <div id="page-content-wrapper">
         <div class="content-header">
@@ -284,8 +290,26 @@ border-top: 2px solid #D768C3;
 
             </h1>
         </div>
-
         <div class="page-content inset" data-spy="scroll" data-target="#spy">
+            <form method="post" th:action="@{/export-csv}">
+                <b>Export Job Orders</b>
+                <br>
+                <div class="row">
+                    <div class="col-md-4 ">
+                        From
+                        <input type="date" class="form-control " th:name="dateFrom" autocomplete="off"/>
+                    </div>
+                    <div class="col-md-4">
+                        To
+                        <input type="date" class="form-control " th:name="dateTo" autocomplete="off"/>
+                    </div>
+                    <div class="col-md-4 ">
+                        <button class="btn btn-primary" type="submit">Download</button>
+                    </div>
+                </div>
+            </form>
+            <br>
+            <br>
             <div class="row">
                 <div class="jumbotron text-center" >
                     <table class="table table-condensed">
@@ -302,15 +326,16 @@ border-top: 2px solid #D768C3;
                             <th>To be Processed</th>
                             <th>
                             <a class = "btn btn-success" data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${order.joId}">View More Details</a>
-                            <a class = "btn btn-primary" id = "acceptOrder" th:href="@{'/order/ACCEPTED/' + ${order.joId}}">Accept</a>
-                                <div class = "col-md-6">
-                                    Select Worker
-                                    <select  class="form-control" id = "worker" th:name = "worker">
-                                        <option value = "">None</option>
-                                        <option th:each=" worker : ${workers}" th:value = "${worker}" th:text = "${worker}"></option>
-                                    </select>
-                                </div>
-                            <a class = "btn btn-danger" id = "declineOrder" th:href="@{'/order/DECLINED/' + ${order.joId}}">Decline</a>
+                            <a class = "btn btn-success" data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning-worker'+${order.joId}">Find Worker</a>
+<!--                            <a class = "btn btn-primary" id = "acceptOrder" th:href="@{'/order/ACCEPTED/' + ${order.joId}}">Accept</a>-->
+<!--                                <div class = "col-md-6">-->
+<!--                                    Select Worker-->
+<!--                                    <select  class="form-control" id = "worker" th:name = "worker">-->
+<!--                                        <option value = "">None</option>-->
+<!--                                        <option th:each=" worker : ${workers}" th:value = "${worker}" th:text = "${worker}"></option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                            <a class = "btn btn-danger" id = "declineOrder" th:href="@{'/order/DECLINED/' + ${order.joId}}">Decline</a>-->
                                 <div class="modal modal-warning fade in" th:id="modal-warning+${order.joId }" >
                                     <div class="modal-dialog">
                                         <div class="modal-content">
@@ -389,6 +414,47 @@ border-top: 2px solid #D768C3;
                                         </div>
                                     </div>
                                 </div>
+                                <div class="modal modal-warning fade in" th:id="modal-warning-worker+${order.joId }" >
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span></button>
+                                                <h5 class="modal-title">Assign Worker</h5>
+                                            </div>
+                                            <div class="modal-body">
+                                                <h3>Worker Contents</h3>
+                                                <table>
+                                                    <thead>
+
+                                                    </thead>
+
+                                                        <tbody>
+                                                        <div class = "row">
+                                                        <tr th:each = "worker : ${workers}">
+                                                            <div class = "col-md-4">
+                                                                <div th:text = "${worker}">
+                                                                </div>
+                                                                <a class = "btn btn-primary" id = "orderWorker" th:href="@{'/order/ACCEPTED/' + ${order.joId} + '/'+${worker}}">Accept</a>
+                                                                <br>
+                                                                <br>
+                                                                <br>
+                                                                <br>
+                                                            </div>
+                                                            <div class = "col-md-4"></div>
+                                                            <div class = "col-md-4"></div>
+                                                        </tr>
+                                                        </div>
+                                                        </tbody>
+
+                                                </table>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline pull-left" data-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </th>
                         </tr>
                         </tbody>
@@ -427,5 +493,8 @@ border-top: 2px solid #D768C3;
 
 <!-- Latest compiled and minified JavaScript -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@3.3.7/dist/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script th:src="@{assets/moment/moment.min.js}"></script>
+<script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script
+<script th:src="@{assets/daterangepicker/daterangepicker.js}"></script>
 </body>
 </html>

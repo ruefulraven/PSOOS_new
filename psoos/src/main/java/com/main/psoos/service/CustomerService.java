@@ -7,4 +7,6 @@ public interface CustomerService {
     Customer getCustomerByName(String name);
     Customer updateCustomerDetails(Customer customer);
 
+    Customer getCustomerById(Integer id);
+
 }

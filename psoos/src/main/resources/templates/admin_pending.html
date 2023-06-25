@@ -283,13 +283,13 @@ border-top: 2px solid #D768C3;
             </thead>
             <tbody>
             <tr th:each = "order : ${orders}">
+              <form class = "form " action="" th:action = "@{/order/__${order.joId}__}" method = "post" enctype="multipart/form-data">
               <th th:text = "${order.joId}"></th>
               <th th:text = "${order.status}"></th>
               <th>
                 <a class = "btn btn-success" data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning'+${order.joId}">View More Details</a>
-                <a class = "btn btn-primary" th:href="@{'/order/DONE/' + ${order.joId}}">Done</a>
-<!--                <a class = "btn btn-danger" th:href="@{'/order/DECLINED/' + ${order.joId}}">Decline</a>-->
-
+<!--                <a class = "btn btn-primary" th:href="@{'/order/DONE/' + ${order.joId}}">Done</a>-->
+                <a class = "btn btn-success" data-toggle="modal" data-target="#modal-warning" th:attr="data-target='#modal-warning-worker'+${order.joId}">Change Status</a>
                 <div class="modal modal-warning fade in" th:id="modal-warning+${order.joId }" >
                   <div class="modal-dialog">
                     <div class="modal-content">
@@ -368,7 +368,37 @@ border-top: 2px solid #D768C3;
                     </div>
                   </div>
                 </div>
+                <div id="myModal" class="modal fade" role="dialog" th:id="modal-warning-worker+${order.joId }">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">Action & Status</h4>
+                      </div>
+                      <div class="modal-body">
+                        <p>Job Progess</p>
+                        <select  class="form-control" id="color" th:name = "orderStatus">
+                          <option value = "ACCEPTED">Order Accepted</option>
+                          <option value = "IN-PROGRESS">On Process</option>
+                          <option value = "COMPLETED">Completed</option>
+                          <option value = "FOR-PICKUP">For Pickup</option>
+                        </select>
+                        <div class="form-group">
+                          <label for="comment">Notes:</label>
+                          <textarea class="form-control" rows="5" id="comment" th:name = "workerNotes"></textarea>
+                          <input  th:name = "joId" th:value = "${order.joId }" hidden/>
+                        </div>
+                      </div>
+                      <div class="modal-footer">
+                        <input type = "submit" placeholder = "Submit Order" class = "btn btn-primary" />
+                      </div>
+                    </div>
+
+                  </div>
+                </div>
               </th>
+              </form>
             </tr>
             </tbody>
           </table>

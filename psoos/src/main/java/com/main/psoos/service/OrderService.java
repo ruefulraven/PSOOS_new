@@ -1,7 +1,7 @@
 package com.main.psoos.service;
 
 import com.main.psoos.model.Order;
-
+import java.util.Date;
 import java.util.List;
 
 public interface OrderService {
@@ -15,4 +15,6 @@ public interface OrderService {
     Order findByJobId(String jobId);
 
     byte[] getImage(String joId);
+
+    List<Order> getAllOrdersByDate(Date startDate, Date endDate);
 }

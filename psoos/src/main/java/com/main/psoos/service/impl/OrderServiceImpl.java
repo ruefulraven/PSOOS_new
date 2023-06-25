@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.zip.Inflater;
 
 @Service
@@ -52,6 +52,11 @@ public class OrderServiceImpl implements OrderService {
         OrderDTO dto = new OrderDTO(dbImage);
         //return decompressImage(dto.getBarcode());
         return dto.getBarcode();
+    }
+
+    @Override
+    public List<Order> getAllOrdersByDate(Date startDate, Date endDate) {
+        return orderRepository.findAllByCreationDateBetween(startDate, endDate);
     }
 
     public  byte[] decompressImage(byte[] data) {

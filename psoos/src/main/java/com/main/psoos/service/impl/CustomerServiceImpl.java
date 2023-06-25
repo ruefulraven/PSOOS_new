@@ -25,4 +25,9 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer updateCustomerDetails(Customer customer) {
         return customerRepository.save(customer);
     }
+
+    @Override
+    public Customer getCustomerById(Integer id) {
+        return customerRepository.findByCustomerId(id);
+    }
 }
