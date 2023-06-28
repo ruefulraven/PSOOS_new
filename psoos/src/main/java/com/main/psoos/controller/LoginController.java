@@ -409,7 +409,7 @@ public class LoginController {
             customerOrderDTO.add(new OrderDTO(order));
         });
         model.addAttribute("orders", customerOrderDTO);
-        return myOrdersPage(model);
+        return "myOrders";
     }
 
     @GetMapping("/homePage")
@@ -549,9 +549,9 @@ public class LoginController {
         });
 
         model.addAttribute("orders", customerOrderDTO);
-        mugOrders = null;
-        shirtOrders = null;
-        documentOrders = null;
+        mugOrders = new ArrayList<>();
+        shirtOrders =  new ArrayList<>();
+        documentOrders =  new ArrayList<>();
         return "myOrders";
     }
 
@@ -848,9 +848,9 @@ public class LoginController {
     public String logout(Model model){
         loggedUser = null;
         loggedCustomer = null;
-        mugOrders = null;
-        shirtOrders = null;
-        documentOrders = null;
+        mugOrders = new ArrayList<>();
+        shirtOrders =  new ArrayList<>();
+        documentOrders =  new ArrayList<>();
         orders = null;
         this.model = null;
         model.addAttribute("logoutMessage","User has successfully logout" );

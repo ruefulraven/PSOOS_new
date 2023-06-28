@@ -86,8 +86,13 @@
     <div class = "error" th:if = "${isSuccess} == false">
       <h4 class = "text-danger"> Credentials is Wrong</h4>
     </div>
+    <div class = "error" th:if = "${isSuccess} == false">
+        <h4 class = "text-danger"> Credentials is Wrong</h4>
+    </div>
     <div class = "error" th:if = "${emailBlank} == true">
         <h4 class = "text-danger"> Email must not be blank!!</h4>
+    </div>
+    <div class = "error" th:text = "${logoutMessage}">
     </div>
 
     <form class = "form " action="" th:action = "@{/login}" method = "post">
