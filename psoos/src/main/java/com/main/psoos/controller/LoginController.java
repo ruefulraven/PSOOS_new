@@ -852,7 +852,7 @@ public class LoginController {
         shirtOrders =  new ArrayList<>();
         documentOrders =  new ArrayList<>();
         orders = null;
-        this.model = null;
+        this.model = new HashMap<>();
         model.addAttribute("logoutMessage","User has successfully logout" );
         return loginPage(model);
     }
