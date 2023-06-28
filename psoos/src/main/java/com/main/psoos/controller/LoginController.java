@@ -220,6 +220,7 @@ public class LoginController {
                                 orderDTO.setMugDTOS(mugService.getMugDTOByJoId(orderDTO.getJoId()));
                                 orderDTO.setDocumentDTOS(documentService.getDocumentDTOByJoId(orderDTO.getJoId()));
                                 orderDTO.setShirtDTOS(shirtService.getShirtDTOByJoId(orderDTO.getJoId()));
+                                orderDTO.setWorkerNotes(tempOrder.getWorkerNotes());
                             orders.add(orderDTO);
             });
         model.addAttribute("orders", orders);
@@ -762,6 +763,8 @@ public class LoginController {
         order.setWorkerNotes(orderDTO.getWorkerNotes());
         orderService.saveOrders(order);
 
+
+
         return adminPendingOrdersPage(model, loggedUser);
     }
 
@@ -851,7 +854,7 @@ public class LoginController {
         mugOrders = new ArrayList<>();
         shirtOrders =  new ArrayList<>();
         documentOrders =  new ArrayList<>();
-        orders = null;
+        orders = new ArrayList<>();
         this.model = new HashMap<>();
         model.addAttribute("logoutMessage","User has successfully logout" );
         return loginPage(model);
