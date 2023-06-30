@@ -57,6 +57,10 @@ border-top: 2px solid #D768C3;
    border-bottom: 2px solid #28B6CF;
    border-right: 2px solid #28B6CF;
 }
+
+.border-highlight {
+    border:5px dashed red;
+}
 </style>
 <body>
 <nav class="navbar">
@@ -141,7 +145,7 @@ border-top: 2px solid #D768C3;
             <div class = "row">
                 <div class = "col-md-6">
                     <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#myModal">View Customizations</button>
-                    <input type="hidden" name="customizationType" th:name = "customizationType">
+                    <input type="hidden" name="customizationType" th:name = "customizationType" id = "asd">
                     <div id="myModal" class="modal fade" role="dialog">
                         <div class="modal-dialog">
 
@@ -168,28 +172,30 @@ border-top: 2px solid #D768C3;
                             </div>
 
                         </div>
+
                     </div>
 
-                    <script>
-                    $('#thumbs').delegate('img', 'click', function() {
-                        var $this = $(this);
-                        // Clear formatting
-                        $('#thumbs img').removeClass('border-highlight');
 
-                        // Highlight with coloured border
-                        $this.addClass('border-highlight');
-
-                        // Changes the value of the form field "animal" to the file name shown in the image.
-                        $('[name="customizationType"]').val( $this.attr('id').substring(0)
-                                                );
-                        //alert('You picked ' + $('[name="customizationType"]').val() );
-                    });
-
-                  </script>
                     <h5><b>Total Price</b></h5>
                     <input type = "number" id = "price" th:name = "price" readonly>
                 </div>
             </div>
+        <script>
+                           $('#thumbs').delegate('img', 'click', function() {
+                                var $this = $(this);
+                                // Clear formatting
+                                $('#thumbs img').removeClass('border-highlight');
+
+                                // Highlight with coloured border
+                                $this.addClass('border-highlight');
+
+                                // Changes the value of the form field "animal" to the file name shown in the image.
+                                $('[name="customizationType"]').val( $this.attr('id').substring(0)
+                                                        );
+                                alert('You picked ' + $('[name="customizationType"]').val() );
+                            });
+
+                      </script>
         </div>
 
 

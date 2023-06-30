@@ -572,30 +572,40 @@ public class LoginController {
     public void addMugOrder(MugDTO mugDTO) throws IOException {
         mugDTO.setOrderType("MUG");
 
-            String uploadDir = "C:\\Users\\Axel\\Downloads\\" + loggedUser.getUserId();
-            String fileName = StringUtils.cleanPath(mugDTO.getFile().getOriginalFilename());
-            Path uploadPath = Paths.get(uploadDir);
-            if(!Files.exists(uploadPath)){
-                Files.createDirectory(uploadPath);
-            }
-            try{
-                File file = new File(uploadDir +"\\" +fileName);
-                String mimeType = Files.probeContentType(uploadPath);
-                DiskFileItem fileItem = new DiskFileItem(fileName, mimeType, false, file.getName(), (int) file.length(), file.getParentFile());
+            if(mugDTO.getFile() == null){
+                String customizedDesignName = mugDTO.getCustomizationType()+".png";
+                File file = new File(MUG_DESIGN_PATH + customizedDesignName);
+                Path downloadPath = Paths.get(MUG_DESIGN_PATH);
+                String mimeType = Files.probeContentType(downloadPath);
+                Path filePath = downloadPath.resolve(customizedDesignName);
+                DiskFileItem fileItem = new DiskFileItem(customizedDesignName, mimeType, false, file.getName(), (int) file.length(), file.getParentFile());
                 fileItem.getOutputStream();
-
-                mugDTO.setFileToUpload(file);
-                InputStream inputStream = mugDTO.getFile().getInputStream();
-                Path filePath = uploadPath.resolve(fileName);
                 CustomMultipartFile customMultipartFile = new CustomMultipartFile(filePath);
                 mugDTO.setFile(customMultipartFile);
-                Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
-                mugOrders.add(mugDTO);
-            }catch(IOException e ){
-                throw new IOException("ERROR IS: " + e.getMessage() + e.getLocalizedMessage() );
+            }else{
+                try{
+                    String uploadDir = "C:\\Users\\Axel\\Downloads\\" + loggedUser.getUserId();
+                    String fileName = StringUtils.cleanPath(mugDTO.getFile().getOriginalFilename());
+                    Path uploadPath = Paths.get(uploadDir);
+                    if(!Files.exists(uploadPath)){
+                        Files.createDirectory(uploadPath);
+                    }
+                    File file = new File(uploadDir +"\\" +fileName);
+                    String mimeType = Files.probeContentType(uploadPath);
+                    DiskFileItem fileItem = new DiskFileItem(fileName, mimeType, false, file.getName(), (int) file.length(), file.getParentFile());
+                    fileItem.getOutputStream();
+                    mugDTO.setFileToUpload(file);
+                    InputStream inputStream = mugDTO.getFile().getInputStream();
+                    Path filePath = uploadPath.resolve(fileName);
+                    CustomMultipartFile customMultipartFile = new CustomMultipartFile(filePath);
+                    mugDTO.setFile(customMultipartFile);
+                    Files.copy(inputStream, file.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+                }catch(IOException e ){
+                    throw new IOException("ERROR IS: " + e.getMessage() + e.getLocalizedMessage() );
+                }
             }
-
-
+            mugOrders.add(mugDTO);
 
     }
     public void addDocumentOrder(DocumentDTO tempDocument) throws IOException {
@@ -892,7 +902,7 @@ public class LoginController {
             fileItem.getOutputStream();
             CustomMultipartFile customMultipartFile = new CustomMultipartFile(filePath);
             String path = SHIRT_DESIGN_PATH+ design.getName().replaceAll(" ", "%20");
-            design.setPath("http://localhost:8081/" + design.getName());
+            design.setPath("http://localhost:8082/" + design.getName());
             design.setName(design.getName());
 
         });
@@ -905,7 +915,6 @@ public class LoginController {
                 stream().map(MugDesignDTO::new).toList();
 
         shirtDesigns.forEach(design -> {
-
             String customizedDesignName = design.getName();
             File file = new File(MUG_DESIGN_PATH + customizedDesignName);
             Path downloadPath = Paths.get(MUG_DESIGN_PATH);
