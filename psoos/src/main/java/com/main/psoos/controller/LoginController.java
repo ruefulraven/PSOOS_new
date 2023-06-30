@@ -773,6 +773,9 @@ public class LoginController {
     @PostMapping("/order/{jobId}")
     public String updateJobOrderStatus(OrderDTO orderDTO, Model model){
         Order order = orderService.findByJobId(orderDTO.getJoId());
+        if(orderDTO.getOrderStatus().equals("COMPLETED")){
+            order.setStatus(orderDTO.getOrderStatus());
+        }
         order.setOrderStatus(orderDTO.getOrderStatus());
         order.setWorkerNotes(orderDTO.getWorkerNotes());
         orderService.saveOrders(order);
