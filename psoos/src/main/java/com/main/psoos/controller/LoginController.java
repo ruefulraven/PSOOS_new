@@ -221,7 +221,12 @@ public class LoginController {
                                 orderDTO.setDocumentDTOS(documentService.getDocumentDTOByJoId(orderDTO.getJoId()));
                                 orderDTO.setShirtDTOS(shirtService.getShirtDTOByJoId(orderDTO.getJoId()));
                                 orderDTO.setWorkerNotes(tempOrder.getWorkerNotes());
-                            orders.add(orderDTO);
+                                String status = "ACCEPTED";
+                                if (tempOrder.getOrderStatus() != null || !tempOrder.getOrderStatus().equals("") ){
+                                    status = tempOrder.getOrderStatus();
+                                }
+                                orderDTO.setStatus(status);
+                                orders.add(orderDTO);
             });
         model.addAttribute("orders", orders);
 
@@ -742,7 +747,7 @@ public class LoginController {
     }
 
     @GetMapping("/order/{status}/{jobId}")
-    public String updateJobOrderStatusToOngoing(@PathVariable("status") String status, @PathVariable("jobId") String jobId, Model model){
+    public String updateJobOrderStatusToOngoing(@PathVariable("orderStatus") String status, @PathVariable("jobId") String jobId, Model model){
 
         Order order = orderService.findByJobId(jobId);
         order.setStatus(status);
