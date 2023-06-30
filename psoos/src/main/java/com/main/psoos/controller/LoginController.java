@@ -571,7 +571,7 @@ public class LoginController {
 
     public void addMugOrder(MugDTO mugDTO) throws IOException {
         mugDTO.setOrderType("MUG");
-        String customizedDesignName = mugDTO.getCustomizationType();
+        String customizedDesignName = mugDTO.getCustomizationType().replace("http://localhost:8081/","").replace("%20"," ");
             if(mugDTO.getFile() == null){
 
                 File file = new File(MUG_DESIGN_PATH + customizedDesignName);
