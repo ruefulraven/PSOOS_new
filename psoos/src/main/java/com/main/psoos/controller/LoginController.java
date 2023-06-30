@@ -695,9 +695,8 @@ public class LoginController {
     public void addShirtOrder(ShirtDTO tempShirt) throws IOException {
         tempShirt.setOrderType("SHIRT");
 
+        String customizedDesignName = tempShirt.getCustomizationType().replace("http://localhost:8082/","").replace("%20"," ");
             if(tempShirt.getFile() == null){
-
-                String customizedDesignName = tempShirt.getCustomizationType();
                 File file = new File(SHIRT_DESIGN_PATH + customizedDesignName);
                 Path downloadPath = Paths.get(SHIRT_DESIGN_PATH);
                 String mimeType = Files.probeContentType(downloadPath);

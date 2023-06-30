@@ -200,18 +200,14 @@ border-top: 2px solid #D768C3;
 
           <script>
             $('#thumbs').delegate('img', 'click', function() {
-                var $this = $(this);
-                // Clear formatting
-                $('#thumbs img').removeClass('border-highlight');
+                    var $this = $(this);
 
-                // Highlight with coloured border
-                $this.addClass('border-highlight');
+                    $('#thumbs img').removeClass('border-highlight');
+                    $this.addClass('border-highlight');
 
-                // Changes the value of the form field "animal" to the file name shown in the image.
-                $('[name="customizationType"]').val( $this.attr('id').substring(0)
-                                        );
-                alert('You picked ' + $('[name="customizationType"]').val() );
-            });
+                   $('[name="customizationType"]').val( $this.prop('src'));
+
+                });
 
           </script>
         </div>
