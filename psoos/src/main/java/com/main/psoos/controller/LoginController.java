@@ -430,7 +430,7 @@ public class LoginController {
 
     @GetMapping("/uploadMug")
     public String uploadMugPage(Model model){
-        model.addAttribute("designs", getAllShirtDesigns());
+        model.addAttribute("designs", getAllMugDesigns());
         return "uploadMug";
     }
 
@@ -571,9 +571,9 @@ public class LoginController {
 
     public void addMugOrder(MugDTO mugDTO) throws IOException {
         mugDTO.setOrderType("MUG");
-
+        String customizedDesignName = mugDTO.getCustomizationType();
             if(mugDTO.getFile() == null){
-                String customizedDesignName = mugDTO.getCustomizationType()+".png";
+
                 File file = new File(MUG_DESIGN_PATH + customizedDesignName);
                 Path downloadPath = Paths.get(MUG_DESIGN_PATH);
                 String mimeType = Files.probeContentType(downloadPath);
@@ -697,7 +697,7 @@ public class LoginController {
 
             if(tempShirt.getFile() == null){
 
-                String customizedDesignName = tempShirt.getCustomizationType()+".png";
+                String customizedDesignName = tempShirt.getCustomizationType();
                 File file = new File(SHIRT_DESIGN_PATH + customizedDesignName);
                 Path downloadPath = Paths.get(SHIRT_DESIGN_PATH);
                 String mimeType = Files.probeContentType(downloadPath);
@@ -932,6 +932,9 @@ public class LoginController {
             design.setPath("http://localhost:8081/" + design.getName());
             design.setName(design.getName());
 
+        });
+        shirtDesigns.forEach(design -> {
+            System.out.println(design.getName());
         });
         return shirtDesigns;
     }
