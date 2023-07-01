@@ -1,13 +1,14 @@
 package com.main.psoos.controller;
 
 import com.main.psoos.dto.ClientDTO;
-import com.main.psoos.dto.CsvDTO;
 import com.main.psoos.dto.CustomerDTO;
 import com.main.psoos.dto.DocumentDTO;
 import com.main.psoos.dto.LoginDTO;
 import com.main.psoos.dto.MugDTO;
 import com.main.psoos.dto.MugDesignDTO;
 import com.main.psoos.dto.OrderDTO;
+import com.main.psoos.dto.OrderWorkerDTO;
+import com.main.psoos.dto.ReportsDTO;
 import com.main.psoos.dto.ShirtDTO;
 import com.main.psoos.dto.ShirtDesignDTO;
 import com.main.psoos.dto.UserDTO;
@@ -16,13 +17,13 @@ import com.main.psoos.model.MugDesign;
 import com.main.psoos.model.Order;
 import com.main.psoos.model.ShirtDesign;
 import com.main.psoos.model.User;
-import com.main.psoos.service.CsvService;
 import com.main.psoos.service.CustomMultipartFile;
 import com.main.psoos.service.CustomerService;
 import com.main.psoos.service.DocumentService;
 import com.main.psoos.service.MugDesignService;
 import com.main.psoos.service.MugService;
 import com.main.psoos.service.OrderService;
+import com.main.psoos.service.ReportsService;
 import com.main.psoos.service.ShirtDesignService;
 import com.main.psoos.service.ShirtService;
 import com.main.psoos.service.UserService;
@@ -55,9 +56,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 
@@ -88,7 +97,7 @@ public class LoginController {
     MugDesignService mugDesignService;
 
     @Autowired
-    CsvService csvService;
+    ReportsService reportsService;
 
     List<DocumentDTO> documentOrders = new ArrayList<>();
     List<MugDTO> mugOrders = new ArrayList<>();
@@ -222,7 +231,7 @@ public class LoginController {
                                 orderDTO.setShirtDTOS(shirtService.getShirtDTOByJoId(orderDTO.getJoId()));
                                 orderDTO.setWorkerNotes(tempOrder.getWorkerNotes());
                                 String status = "ACCEPTED";
-                                if (tempOrder.getOrderStatus() != null || !tempOrder.getOrderStatus().equals("") ){
+                                if (tempOrder.getOrderStatus() != null){
                                     status = tempOrder.getOrderStatus();
                                 }
                                 orderDTO.setStatus(status);
@@ -518,6 +527,7 @@ public class LoginController {
         orderDTO.setDocumentDTOS(documentOrders);
         orderDTO.setShirtDTOS(shirtOrders);
         orderDTO.setStatus("CREATED");
+
         orderDTO.setJoId("JO-" + Math.addExact(orderService.countOrder(), 1));
         Integer totalPrice = 0;
 
@@ -545,7 +555,9 @@ public class LoginController {
         byte[] byteImage = baos.toByteArray();
         orderDTO.setBarcode(byteImage);
 
-        orderService.saveOrders(new Order(orderDTO));
+        Order orderToSave = new Order(orderDTO);
+        orderToSave.setFinishDate("");
+        orderService.saveOrders(orderToSave);
 
         List<Order> customerOrders = new ArrayList<>();
         customerOrders = orderService.getOrdersById(loggedCustomer.getCustomerId());
@@ -763,6 +775,24 @@ public class LoginController {
         Order order = orderService.findByJobId(jobId);
         order.setWorker(worker);
         order.setStatus(status);
+        orderService.saveOrders(order);
+
+        return adminPage(model, loggedUser);
+    }
+
+    @PostMapping("/order/{jobId}/{worker}")
+    public String updatedOrderWorkerV2(OrderWorkerDTO orderWorkerDTO, @PathVariable("jobId") String jobId, Model model) throws ParseException {
+
+        Order order = orderService.findByJobId(jobId);
+        SimpleDateFormat format = new SimpleDateFormat("EE MMM dd HH:mm:ss z yyyy",
+                Locale.ENGLISH);
+        String outputDateFormat = "yyyy-MM-dd";
+        DateTimeFormatter outputFormat = DateTimeFormatter.ofPattern(outputDateFormat);
+        Date formattedDate = format.parse(orderWorkerDTO.getDateToFinish().toString());
+
+        order.setWorker(orderWorkerDTO.getWorker());
+        order.setStatus("ACCEPTED");
+        order.setFinishDate(formattedDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime().format(outputFormat));
         orderService.saveOrders(order);
 
         return adminPage(model, loggedUser);
@@ -1015,11 +1045,20 @@ public class LoginController {
     }
 
     @PostMapping("export-csv")
-    public void exportCSV(CsvDTO csvDTO, HttpServletResponse response) throws IOException {
-        response.setContentType("text/csv");
-        response.setHeader("Content-Disposition", "attachment; filename=\"orders" + ".csv\"");
+    public void exportCSV(ReportsDTO reportsDTO, HttpServletResponse response) throws IOException {
         List<Order> retrievedOrders = orderService.
-                getAllOrdersByDate(csvDTO.getDateFrom(), csvDTO.getDateTo());
-        csvService.printOrders(retrievedOrders,response.getWriter());
+                getAllOrdersByDate(reportsDTO.getDateFrom(), reportsDTO.getDateTo());
+        switch(reportsDTO.getImportType()){
+            case "CSV":
+                response.setContentType("text/csv");
+                response.setHeader("Content-Disposition", "attachment; filename=\"orders" + ".csv\"");
+                reportsService.printOrders(retrievedOrders,response.getWriter());
+                break;
+            case "PDF":
+                response.setContentType("text/pdf");
+                response.setHeader("Content-Disposition", "attachment; filename=\"orders" + ".pdf\"");
+                reportsService.printOrdersPdf(retrievedOrders,response);
+                break;
+        }
     }
 }

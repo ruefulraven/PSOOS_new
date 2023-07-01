@@ -47,11 +47,15 @@ public class Mug {
 
     @Column(name = "price")
     private Integer price;
+    @Column(name = "mug_notes")
+    String mugNotes;
+
 
     public Mug(MugDTO mug){
         this.mugColor = mug.getMugColor();
         this.jobOrder = mug.getJobOrder();
         this.noOfMug = mug.getNoOfMug();
         this.fileType = mug.getFileType();
+        this.mugNotes = mug.getMugNotes();
     }
 }

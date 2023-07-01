@@ -12,8 +12,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.CurrentTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Entity
@@ -44,6 +46,7 @@ public class Order {
     @Column(name = "creation_date")
     private LocalDateTime creationDate;
 
+
     @UpdateTimestamp
     @Column(name = "modified_date")
     private LocalDateTime modifiedDate;
@@ -62,6 +65,9 @@ public class Order {
     @Column(name = "worker_notes")
     String workerNotes;
 
+    @Column(name = "expected_finish_date")
+    private String finishDate;
+
     public Order(OrderDTO order){
         //this.id = order.getOrderId();
         this.customerId = order.getCustomerId();
@@ -72,5 +78,6 @@ public class Order {
         this.worker = order.getWorker();
         this.workerNotes = order.getWorkerNotes();
         this.orderStatus = order.getOrderStatus();
+        this.finishDate = (order.getFinishDate() == null) ? "" : order.getFinishDate().toString();
     }
 }

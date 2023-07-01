@@ -5,7 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.cglib.core.Local;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 
@@ -27,6 +31,7 @@ public class OrderDTO {
     String orderStatus;
     String worker;
     String workerNotes;
+    LocalDateTime finishDate;
     public OrderDTO(Order order){
         this.orderId = order.getId();
         this.customerId = order.getCustomerId();
@@ -37,5 +42,10 @@ public class OrderDTO {
         this.worker = order.getWorker();
         this.workerNotes = order.getWorkerNotes();
         this.orderStatus = order.getOrderStatus();
+//        if(order.getFinishDate() == null || order.getFinishDate().equals("")){
+//            this.finishDate = LocalDateTime.now();
+//        }else{
+//            this.finishDate = LocalDateTime.parse(order.getFinishDate());
+//        }
     }
 }

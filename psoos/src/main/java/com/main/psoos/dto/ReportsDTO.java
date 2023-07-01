@@ -10,7 +10,7 @@ import java.util.Date;
 @Getter
 @Setter
 @NoArgsConstructor
-public class CsvDTO {
+public class ReportsDTO {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateFrom;
@@ -18,4 +18,6 @@ public class CsvDTO {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dateTo;
+
+    private String importType;
 }
