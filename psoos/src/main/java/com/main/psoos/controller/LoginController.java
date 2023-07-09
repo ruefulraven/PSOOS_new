@@ -11,6 +11,7 @@ import com.main.psoos.dto.OrderWorkerDTO;
 import com.main.psoos.dto.ReportsDTO;
 import com.main.psoos.dto.ShirtDTO;
 import com.main.psoos.dto.ShirtDesignDTO;
+import com.main.psoos.dto.ToBeSubmitOrders;
 import com.main.psoos.dto.UserDTO;
 import com.main.psoos.model.Customer;
 import com.main.psoos.model.MugDesign;
@@ -106,6 +107,8 @@ public class LoginController {
     private Customer loggedCustomer = new Customer();
     private User loggedUser = new User();
     private Map<String, Object> model = new HashMap<>();
+
+    List<ToBeSubmitOrders> toBeSubmitOrders = new ArrayList<>();
 
     private final String SHIRT_DESIGN_PATH = "C:\\Users\\Axel\\Downloads\\PSOOS_new\\psoos\\src\\main\\resources\\static\\img\\T-Shirt Designs\\";
     private final String MUG_DESIGN_PATH = "C:\\Users\\Axel\\Downloads\\PSOOS_new\\psoos\\src\\main\\resources\\static\\img\\Mugs Designs\\";
@@ -473,6 +476,7 @@ public class LoginController {
     @PostMapping("/addDocument")
     public String addDocument(DocumentDTO tempDocument, Model model) throws IOException {
         addDocumentOrder(tempDocument);
+
         model.addAttribute("orders", documentOrders);
         model.addAttribute("mugOrders", mugOrders);
         model.addAttribute("shirtOrders", shirtOrders);
@@ -483,6 +487,9 @@ public class LoginController {
                 mugOrders);
 
         model.addAttribute("totalPrice", totalPrice);
+        ToBeSubmitOrders toAdd = new ToBeSubmitOrders(tempDocument.getOrderType(), tempDocument.getNoOfPages(), "PENDING");
+        toBeSubmitOrders.add(toAdd);
+        model.addAttribute("ordersToBeSubmitted", toAdd);
         return "cartOrders";
     }
 
@@ -498,6 +505,9 @@ public class LoginController {
                 documentOrders,
                 mugOrders);
         model.addAttribute("totalPrice", totalPrice);
+        ToBeSubmitOrders toAdd = new ToBeSubmitOrders(mugDTO.getOrderType(), mugDTO.getNoOfMug(), "PENDING");
+        toBeSubmitOrders.add(toAdd);
+        model.addAttribute("ordersToBeSubmitted", toAdd);
         return "cartOrders";
     }
 

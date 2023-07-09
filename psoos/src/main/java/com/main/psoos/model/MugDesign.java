@@ -38,5 +38,6 @@ public class MugDesign {
         this.isDeleted = mug.isDeleted();
         this.name = mug.getName();
         this.type = mug.getType();
+        this.id = mug.getId();
     }
 }

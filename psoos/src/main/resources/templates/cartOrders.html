@@ -270,7 +270,7 @@ border-top: 2px solid #D768C3;
       <div class="row">
         <div class="jumbotron text-center" >
           <div class = "row">
-            <div class = "col-md-4">
+            <div class = "col-md-12">
               <table class="table table-condensed">
                 <thead>
                 <tr>
@@ -282,54 +282,10 @@ border-top: 2px solid #D768C3;
                 </tr>
                 </thead>
                 <tbody>
-                <tr th:each = "order : ${orders}">
+                <tr th:each = "order : ${ordersToBeSubmitted}">
                   <th th:text = "${order.orderType}"></th>
-                  <th th:text = "${order.noOfPages}"></th>
-                  <th th:text = "${order.paperSize}"></th>
-                  <th th:text = "${order.printType}"></th>
-                  <th>PENDING</th>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class = "col-md-4">
-              <table class="table table-condensed">
-                <thead>
-                <tr>
-                  <th>Order Type</th>
-                  <th>MugColor</th>
-                  <th>No. of Mugs</th>
-                  <th>Status</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each = "order : ${mugOrders}">
-                  <th th:text = "${order.orderType}"></th>
-                  <th th:text = "${order.mugColor}"></th>
-                  <th th:text = "${order.noOfMug}"></th>
-                  <th>PENDING</th>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-            <div class = "col-md-4">
-              <table class="table table-condensed">
-                <thead>
-                <tr>
-                  <th>Order Type</th>
-                  <th>Shirt Size</th>
-                  <th>Print Type</th>
-                  <th>No. of Shirts</th>
-                  <th>Status</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each = "order : ${shirtOrders}">
-                  <th th:text = "${order.orderType}"></th>
-                  <th th:text = "${order.shirtSize}"></th>
-                  <th th:text = "${order.printType}"></th>
-                  <th th:text = "${order.noOfShirt}"></th>
-                  <th>PENDING</th>
+                  <th th:text = "${order.noOfType}"></th>
+                  <th th:text = "${order.Status}"></th>
                 </tr>
                 </tbody>
               </table>

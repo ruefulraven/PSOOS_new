@@ -21,6 +21,7 @@ public class MugDesignDTO {
        // this.data = mug.getData();
         this.name = mug.getName();
         this.type = mug.getType();
+        this.id = mug.getId();
     }
 
     public void setIsDeleted(boolean isDeleted) {
